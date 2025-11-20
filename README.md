@@ -126,5 +126,5 @@ node server/server.js <PORT>
 ---
 
 **Hochschule Trier**  
-**Studiengänge**: Informatik (Vladislav Slugin), Medizininformatik (Sofie Halbedl)  
+**Autoren**: Vladislav Slugin (Informatik), Sofie Halbedl (Medizininformatik)  
 **Semester**: WS 2025/26
