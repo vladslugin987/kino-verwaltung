@@ -1,0 +1,59 @@
+# .gitignore for kino-verwaltung
+# Node.js/Express web application with MongoDB
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+Icon?
+*.lnk
+
+# IDE / Editors
+.vscode/
+.history/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Environment files / secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Node.js
+node_modules/
+npm-shrinkwrap.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build output
+dist/
+build/
+.cache/
+.tmp/
+coverage/
+
+# Runtime
+*.pid
+*.seed
+
+# Database
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+
+# Misc
+*.swp
+*.bak
+*.orig
+.recently-used.xbel

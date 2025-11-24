@@ -11,5 +11,17 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "esbuild": "^0.27.0",
+    "less": "^4.4.2",
+    "less-plugin-clean-css": "^1.6.0",
+    "semistandard": "^17.0.0",
+    "snazzy": "^9.0.0",
+    "terser": "^5.44.1"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "mongodb": "^7.0.0"
+  }
 }
