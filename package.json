@@ -8,9 +8,9 @@
   },
   "scripts": {
     "clean": "shx rm -rf webapp/dist node_modules",
-    "lint": "semistandard --verbose webapp/src/js/**/*.mjs server/src/**/*.mjs | snazzy",
+    "lint": "npx semistandard --verbose | snazzy",
     "debug": "npm run html && npm run css && npm run js",
-    "build": "npm run debug && npm run minify",
+    "build": "npm run lint && npm run debug && npm run minify",
     "html": "shx mkdir -p webapp/dist && shx cp webapp/src/index.html webapp/dist/",
     "css": "shx mkdir -p webapp/dist && lessc webapp/src/styles/style.less webapp/dist/style.css",
     "js": "shx mkdir -p webapp/dist && esbuild webapp/src/js/Main.mjs --log-level=warning --bundle --outfile=webapp/dist/bundle.js",
