@@ -111,9 +111,9 @@ node server/server.js <PORT>
 
 - [x] Repository eingerichtet
 - [x] README erstellt
-- [ ] Grundgerüst der Anwendung
-- [ ] Build-Prozess implementiert
-- [ ] Server-Setup
+- [x] Grundgerüst der Anwendung
+- [x] Build-Prozess implementiert
+- [x] Server-Setup
 - [ ] MongoDB-Integration
 - [ ] REST-API
 - [ ] Frontend-Grundstruktur
