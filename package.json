@@ -7,19 +7,15 @@
     "doc": "docs"
   },
   "scripts": {
-    "clean": "shx rm -rf webapp/dist node_modules",
-    "lint": "npx semistandard --verbose | snazzy",
-    "debug": "npm run html && npm run css && npm run js",
-    "build": "npm run lint && npm run debug && npm run minify",
-    "html": "shx mkdir -p webapp/dist && shx cp webapp/src/index.html webapp/dist/",
-    "css": "shx mkdir -p webapp/dist && lessc webapp/src/styles/style.less webapp/dist/style.css",
-    "js": "shx mkdir -p webapp/dist && esbuild webapp/src/js/Main.mjs --log-level=warning --bundle --outfile=webapp/dist/bundle.js",
-    "watch:css": "nodemon --watch webapp/src/styles -e less --exec \"npm run css\"",
-    "watch:js": "esbuild webapp/src/js/Main.mjs --bundle --outfile=webapp/dist/bundle.js --watch",
-    "watch:html": "nodemon --watch webapp/src/index.html --exec \"npm run html\"",
-    "dev": "concurrently \"npm run watch:css\" \"npm run watch:js\" \"npm run watch:html\" \"nodemon server/src/Server.mjs\" \"browser-sync start --proxy localhost:8080 --files webapp/dist\"",
+    "clean": "rm -rf webapp/dist node_modules",
+    "lint": "semistandard --verbose \"server/src/**/*.{js,mjs}\" \"webapp/src/**/*.{js,mjs}\"",
+    "debug": "npm run lint && npm run html && npm run css && npm run js",
+    "build": "npm run debug && npm run minify",
+    "html": "mkdir -p webapp/dist && cp webapp/src/index.html webapp/dist/index.html",
+    "css": "mkdir -p webapp/dist && lessc webapp/src/styles/style.less webapp/dist/style.css",
+    "js": "mkdir -p webapp/dist && esbuild webapp/src/js/Main.mjs --log-level=warning --bundle --outfile=webapp/dist/bundle.js",
     "minify": "npm run minify:css && npm run minify:js",
-    "minify:css": "lessc --clean-css webapp/dist/style.css webapp/dist/style.css",
+    "minify:css": "lessc --plugin=less-plugin-clean-css webapp/src/styles/style.less webapp/dist/style.css",
     "minify:js": "terser webapp/dist/bundle.js --compress --mangle --comments=false -o webapp/dist/bundle.js",
     "start": "node server/src/Server.mjs 8080"
   },
@@ -27,15 +23,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "browser-sync": "^3.0.4",
-    "concurrently": "^9.2.1",
     "esbuild": "^0.27.0",
     "less": "^4.4.2",
     "less-plugin-clean-css": "^1.6.0",
-    "nodemon": "^3.1.11",
     "semistandard": "^17.0.0",
-    "shx": "^0.4.0",
-    "snazzy": "^9.0.0",
     "terser": "^5.44.1"
   },
   "dependencies": {

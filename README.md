@@ -31,8 +31,6 @@ Diese Anwendung ermöglicht die Verwaltung von Kinosälen, Vorstellungen und Res
 
 ## Installation & Verwendung
 
-> **Hinweis**: Das Projekt befindet sich aktuell in der Entwicklung. Die folgenden Befehle werden im Laufe der Entwicklung implementiert.
-
 ### Voraussetzungen
 
 - Node.js (aktuelle Version)
@@ -65,7 +63,7 @@ npm start        # Server an Port 8080 starten
 ### Server mit benutzerdefiniertem Port starten
 
 ```bash
-node server/server.js <PORT>
+node server/src/Server.mjs <PORT>
 ```
 
 ## Anforderungen
