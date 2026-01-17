@@ -1,0 +1,41 @@
+name: Deploy to InfinityFree (FTP)
+
+on:
+  push:
+    branches: ["main", "master"]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-infinityfree
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install deps
+        run: npm ci
+
+      # NOTE:
+      # - This repo currently has a "build" script that calls "minify", but "minify" isn't defined.
+      # - "debug" reliably produces webapp/dist (index.html, style.css, bundle.js).
+      - name: Build webapp/dist
+        run: npm run debug
+
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.INF_FTP_SERVER }}
+          username: ${{ secrets.INF_FTP_USERNAME }}
+          password: ${{ secrets.INF_FTP_PASSWORD }}
+          local-dir: webapp/dist/
+          server-dir: ${{ secrets.INF_FTP_SERVER_DIR }}
