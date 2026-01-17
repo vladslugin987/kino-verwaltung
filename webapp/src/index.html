@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
   <link rel="stylesheet" href="style.css">
   <script src="bundle.js" defer></script>
 </head>
+
 <body>
   <header class="header">
     <div class="left">
@@ -21,7 +23,51 @@
   </header>
 
   <div id="Betreiber" class="betreiber">
-    Das ist die Betreiberseite
+    <div class="row">
+      <div class="container">
+        <div class="bigFont"> Kinosaal anlegen </div>
+        Name des Saals
+        <br>
+        <textarea class="textarea">
+      </textarea>
+        <br>
+        Anzahl der Sitzreihen
+        <br>
+        <textarea class="textarea">
+      </textarea>
+        <br>
+        Sitze pro Reihe
+        <br>
+        <textarea class="textarea">
+      </textarea>
+        <br>
+        <button id="KinosaalAnlegen" class="bodyButton" type="button">Saal anlegen</button>
+      </div>
+      <div class="container">
+        <div class="bigFont"> Vorstellung anlegen </div>
+        Film
+        <br>
+        <textarea class="textarea">
+      </textarea>
+        <br>
+        Kinosaal
+        <br>
+        <textarea class="textarea">
+      </textarea>
+        <br>
+        Datum
+        <br>
+        <textarea class="textarea">
+      </textarea>
+        <br>
+        Uhrzeit
+        <br>
+        <textarea class="textarea">
+      </textarea>
+        <br>
+        <button id="VorstellungAnlegen" class="bodyButton" type="button">Vorstellung anlegen</button>
+      </div>
+    </div>
   </div>
 
   <div id="Kunde" class="kunde">
@@ -30,4 +76,5 @@
 
   <main id="app"></main>
 </body>
+
 </html>

@@ -1,10 +1,6 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const app = document.querySelector('#app');
-  if (app) app.textContent = 'Hello World';
-});
 
-const bodyBetreiber = document.getElementByID("Betreiber");
-const bodyKunde = document.getElementByID("Kunde");
+const bodyBetreiber = document.getElementById("Betreiber");
+const bodyKunde = document.getElementById("Kunde");
 
 document.getElementById("BetreiberButton").addEventListener("click", () => {
   bodyBetreiber.style.display = "block";
@@ -14,4 +10,11 @@ document.getElementById("BetreiberButton").addEventListener("click", () => {
 document.getElementById("KundenButton").addEventListener("click", () => {
   bodyKunde.style.display = "block";
   bodyBetreiber.style.display = "none";
+});
+
+document.getElementById("KinosaalAnlegen").addEventListener("click", () => {
+
+});
+document.getElementById("VorstellungAnlegen").addEventListener("click", () => {
+  
 });
