@@ -2,7 +2,7 @@
 
 Eine Web-Anwendung zur Verwaltung eines Kinos mit Funktionen für Betreiber und Kunden.
 
-Link: [https://kino-verwaltung.great-site.net/]
+Link: https://kino-verwaltung.great-site.net/
 
 ## Team
 
