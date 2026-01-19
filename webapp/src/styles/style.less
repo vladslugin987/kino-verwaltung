@@ -3,12 +3,13 @@
 }
 
 @primary: blueviolet;
+@primary-active: darken(@primary, 10%);
 @text-on-primary: #fff;
 @bg-page: rgb(230, 230, 230);
 @bg-surface: #fff;
 @text-default: #000;
-@shadow-sm: 0.125rem 0.125rem 0.125rem lightgray; // ~2px 2px 2px
-@radius-sm: 0.125rem; // 2px
+@shadow-sm: 2px 2px 2px lightgray;
+@radius-sm: 3px;
 
 *,
 *::before,
@@ -27,22 +28,27 @@ body {
     background-color: @primary;
     color: @text-on-primary;
     margin: 0;
-    padding: 1.25rem; // 20px
+    padding: 20px;
     align-items: center;
     justify-content: center;
     position: relative;
     display: flex;
-    
 }
 
 .button {
     .font-base();
     color: @text-on-primary;
     background-color: @primary;
-    border: 0.0625rem solid @text-on-primary; // 1px
+    border: 1px solid @text-on-primary;
     border-radius: @radius-sm;
-    width: 5rem; // 80px
-    height: 1.5625rem; // 25px
+    width: auto;
+    height: 1.5rem;
+    padding: 0 0.5rem;
+    cursor: pointer;
+}
+
+.button.is-active {
+    background-color: @primary-active;
 }
 
 .left {
@@ -55,50 +61,53 @@ body {
 
 .button-row {
     display: flex;
-    gap: 0.3125rem; // 5px
+    gap: 5px;
 }
 
-.betreiber {
+.page-view {
     display: none;
     color: @text-default;
 }
 
-.kunde {
-    display: none;
-    color: @text-default;
-}
-
-.container{
+.container {
     .font-base();
     display: block;
     padding: 0.75rem 1rem;
     margin: 1rem auto;
     min-width: 40%;
     max-width: 45%;
-    height: 25rem; // 400px
+    height: 25rem;
     border-radius: @radius-sm;
-    border: 0.0625rem solid @text-default;
+    border: 1px solid @text-default;
     box-shadow: @shadow-sm;
     background-color: @bg-surface;
 }
 
-.bigFont {
-    font-size: 1.5rem; // 24px
+.section-title {
+    font-size: 1.5rem;
     color: @text-default;
     padding-bottom: 0.5rem;
+    font-weight: bold;
 }
 
-.textarea {
+.form-input {
     width: 65%;
     margin: 0.5rem 0 0.75rem;
-    height: 1.375rem; // 22px
+    height: 1.5rem;
+    padding: 0.25rem 0.5rem;
     .font-base();
     box-shadow: @shadow-sm;
-    resize: none;
+    border: 1px solid @text-default;
+    border-radius: @radius-sm;
 }
 
-// Buttons for the body, because the ones in the header need to be the same size meaning no flex
-.bodyButton {
+label {
+    display: block;
+    margin-top: 0.5rem;
+    font-weight: 500;
+}
+
+.submit-button {
     .font-base();
     padding: 0.5rem 0.75rem;
     background-color: @primary;
@@ -109,6 +118,11 @@ body {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    margin-top: 1rem;
+
+    &:hover {
+        opacity: 0.9;
+    }
 }
 
 .row {

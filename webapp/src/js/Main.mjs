@@ -1,20 +1,36 @@
+const operatorPage = document.getElementById("operator-page");
+const customerPage = document.getElementById("customer-page");
+const operatorButton = document.getElementById("operator-button");
+const customerButton = document.getElementById("customer-button");
 
-const bodyBetreiber = document.getElementById("Betreiber");
-const bodyKunde = document.getElementById("Kunde");
+const setActiveRole = (role) => {
+  if (role === "operator") {
+    operatorPage.style.display = "block";
+    customerPage.style.display = "none";
+    operatorButton.classList.add("is-active");
+    customerButton.classList.remove("is-active");
+  } else {
+    customerPage.style.display = "block";
+    operatorPage.style.display = "none";
+    customerButton.classList.add("is-active");
+    operatorButton.classList.remove("is-active");
+  }
+};
 
-document.getElementById("BetreiberButton").addEventListener("click", () => {
-  bodyBetreiber.style.display = "block";
-  bodyKunde.style.display = "none";
+operatorButton.addEventListener("click", () => {
+  setActiveRole("operator");
 });
 
-document.getElementById("KundenButton").addEventListener("click", () => {
-  bodyKunde.style.display = "block";
-  bodyBetreiber.style.display = "none";
+customerButton.addEventListener("click", () => {
+  setActiveRole("customer");
 });
 
-document.getElementById("KinosaalAnlegen").addEventListener("click", () => {
+setActiveRole("operator");
 
+document.getElementById("create-hall-button").addEventListener("click", () => {
+  // TODO: Kinosaal anlegen implementieren
 });
-document.getElementById("VorstellungAnlegen").addEventListener("click", () => {
-  
+
+document.getElementById("create-show-button").addEventListener("click", () => {
+  // TODO: Vorstellung anlegen implementieren
 });

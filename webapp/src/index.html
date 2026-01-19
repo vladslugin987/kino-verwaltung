@@ -14,63 +14,52 @@
     <div class="left">
       <span>Wählen Sie Ihre Rolle:</span>
       <div class="button-row">
-        <button id="BetreiberButton" class="button" type="button">Betreiber</button>
-        <button id="KundenButton" class="button" type="button">Kunde</button>
+        <button id="operator-button" class="button" type="button">Betreiber</button>
+        <button id="customer-button" class="button" type="button">Kunde</button>
       </div>
     </div>
 
     <h2>Kinoverwaltung</h2>
   </header>
 
-  <div id="Betreiber" class="betreiber">
+  <div id="operator-page" class="page-view">
     <div class="row">
       <div class="container">
-        <div class="bigFont"> Kinosaal anlegen </div>
-        Name des Saals
-        <br>
-        <textarea class="textarea">
-      </textarea>
-        <br>
-        Anzahl der Sitzreihen
-        <br>
-        <textarea class="textarea">
-      </textarea>
-        <br>
-        Sitze pro Reihe
-        <br>
-        <textarea class="textarea">
-      </textarea>
-        <br>
-        <button id="KinosaalAnlegen" class="bodyButton" type="button">Saal anlegen</button>
+        <div class="section-title">Kinosaal anlegen</div>
+        
+        <label for="hall-name">Name des Saals</label>
+        <input type="text" id="hall-name" class="form-input">
+        
+        <label for="rows-count">Anzahl der Sitzreihen</label>
+        <input type="number" id="rows-count" class="form-input" min="1">
+        
+        <label for="seats-per-row">Sitze pro Reihe</label>
+        <input type="number" id="seats-per-row" class="form-input" min="1">
+        
+        <button id="create-hall-button" class="submit-button" type="button">Saal anlegen</button>
       </div>
+
       <div class="container">
-        <div class="bigFont"> Vorstellung anlegen </div>
-        Film
-        <br>
-        <textarea class="textarea">
-      </textarea>
-        <br>
-        Kinosaal
-        <br>
-        <textarea class="textarea">
-      </textarea>
-        <br>
-        Datum
-        <br>
-        <textarea class="textarea">
-      </textarea>
-        <br>
-        Uhrzeit
-        <br>
-        <textarea class="textarea">
-      </textarea>
-        <br>
-        <button id="VorstellungAnlegen" class="bodyButton" type="button">Vorstellung anlegen</button>
+        <div class="section-title">Vorstellung anlegen</div>
+        
+        <label for="movie-name">Film</label>
+        <input type="text" id="movie-name" class="form-input">
+        
+        <label for="hall-select">Kinosaal</label>
+        <input type="text" id="hall-select" class="form-input">
+        
+        <label for="show-date">Datum</label>
+        <input type="date" id="show-date" class="form-input">
+        
+        <label for="show-time">Uhrzeit</label>
+        <input type="time" id="show-time" class="form-input">
+        
+        <button id="create-show-button" class="submit-button" type="button">Vorstellung anlegen</button>
       </div>
     </div>
   </div>
 
-  <div id="Kunde" class="kunde">
+  <div id="customer-page" class="page-view">
     Das ist die Kundenseite
   </div>
 
