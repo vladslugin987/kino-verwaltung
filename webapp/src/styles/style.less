@@ -5,6 +5,7 @@
 @primary: blueviolet;
 @primary-active: darken(@primary, 10%);
 @text-on-primary: #fff;
+@seat-selected: #4e73df;
 @bg-page: rgb(230, 230, 230);
 @bg-surface: #fff;
 @text-default: #000;
@@ -209,8 +210,8 @@ label {
 }
 
 .seat {
-    width: 2.2rem;
-    height: 2rem;
+    width: 2.6rem;
+    height: 2.4rem;
     border: 1px solid @text-default;
     border-radius: @radius-sm;
     display: flex;
@@ -219,18 +220,36 @@ label {
     font-size: 0.75rem;
     background-color: @bg-surface;
     box-shadow: @shadow-sm;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
-.seat--selected {
-    background-color: #e74c3c;
+.seat-toggle {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.seat-toggle:not(:checked) + .seat:hover {
+    background-color: #eef1ff;
+    border-color: #c6cff8;
+}
+
+.seat-toggle:checked + .seat {
+    background-color: @seat-selected;
     color: @text-on-primary;
-    border-color: #e74c3c;
+    border-color: @seat-selected;
 }
 
 .seat--taken {
     background-color: #c0392b;
     color: @text-on-primary;
     border-color: #c0392b;
+    cursor: not-allowed;
+}
+
+.seat-toggle:disabled + .seat {
+    cursor: not-allowed;
 }
 
 .seat-legend {
@@ -258,8 +277,8 @@ label {
 }
 
 .legend-swatch--selected {
-    background-color: #e74c3c;
-    border-color: #e74c3c;
+    background-color: @seat-selected;
+    border-color: @seat-selected;
 }
 
 .legend-swatch--taken {
