@@ -175,3 +175,100 @@ label {
 .row .container {
     flex: 1;
 }
+
+.seat-selection {
+    gap: 0.75rem;
+}
+
+.seat-selection .form-input {
+    width: 40%;
+}
+
+.screen {
+    width: 100%;
+    background-color: @primary;
+    color: @text-on-primary;
+    text-align: center;
+    padding: 0.4rem 0;
+    border-radius: @radius-sm;
+    letter-spacing: 0.08rem;
+    font-weight: 600;
+}
+
+.seat-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.5rem 0;
+}
+
+.seat-row {
+    display: flex;
+    gap: 0.4rem;
+}
+
+.seat {
+    width: 2.2rem;
+    height: 2rem;
+    border: 1px solid @text-default;
+    border-radius: @radius-sm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    background-color: @bg-surface;
+    box-shadow: @shadow-sm;
+}
+
+.seat--selected {
+    background-color: #e74c3c;
+    color: @text-on-primary;
+    border-color: #e74c3c;
+}
+
+.seat--taken {
+    background-color: #c0392b;
+    color: @text-on-primary;
+    border-color: #c0392b;
+}
+
+.seat-legend {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 0.25rem;
+}
+
+.legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+}
+
+.legend-swatch {
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: @radius-sm;
+    border: 1px solid @text-default;
+    display: inline-block;
+    background-color: @bg-surface;
+}
+
+.legend-swatch--selected {
+    background-color: #e74c3c;
+    border-color: #e74c3c;
+}
+
+.legend-swatch--taken {
+    background-color: #c0392b;
+    border-color: #c0392b;
+}
+
+.seat-actions {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 0.5rem;
+}
