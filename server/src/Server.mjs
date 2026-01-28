@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { connectDb, closeDb } from './db.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,6 +13,27 @@ const port = process.argv[2] || 8080;
 const distPath = path.join(__dirname, '../../webapp/dist');
 app.use(express.static(distPath));
 
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+const startServer = async () => {
+  try {
+    const { db } = await connectDb();
+    app.locals.db = db;
+    console.log(`MongoDB connected: ${db.databaseName}`);
+  } catch (error) {
+    console.error('MongoDB connection failed:', error);
+    process.exit(1);
+  }
+
+  app.listen(port, () => {
+    console.log(`Server listening on port ${port}`);
+  });
+};
+
+process.on('SIGINT', async () => {
+  try {
+    await closeDb();
+  } finally {
+    process.exit(0);
+  }
 });
+
+startServer();

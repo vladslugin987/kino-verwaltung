@@ -1,46 +1,46 @@
-const operatorPage = document.getElementById("operator-page");
-const customerPage = document.getElementById("customer-page");
-const operatorButton = document.getElementById("operator-button");
-const customerButton = document.getElementById("customer-button");
+const operatorPage = document.getElementById('operator-page');
+const customerPage = document.getElementById('customer-page');
+const operatorButton = document.getElementById('operator-button');
+const customerButton = document.getElementById('customer-button');
 
 const setActiveRole = (role) => {
-  if (role === "operator") {
-    operatorPage.style.display = "block";
-    customerPage.style.display = "none";
-    operatorButton.classList.add("is-active");
-    customerButton.classList.remove("is-active");
+  if (role === 'operator') {
+    operatorPage.style.display = 'block';
+    customerPage.style.display = 'none';
+    operatorButton.classList.add('is-active');
+    customerButton.classList.remove('is-active');
   } else {
-    customerPage.style.display = "block";
-    operatorPage.style.display = "none";
-    customerButton.classList.add("is-active");
-    operatorButton.classList.remove("is-active");
+    customerPage.style.display = 'block';
+    operatorPage.style.display = 'none';
+    customerButton.classList.add('is-active');
+    operatorButton.classList.remove('is-active');
   }
 };
 
-operatorButton.addEventListener("click", () => {
-  setActiveRole("operator");
+operatorButton.addEventListener('click', () => {
+  setActiveRole('operator');
 });
 
-customerButton.addEventListener("click", () => {
-  setActiveRole("customer");
+customerButton.addEventListener('click', () => {
+  setActiveRole('customer');
 });
 
-setActiveRole("operator");
+setActiveRole('operator');
 
-document.getElementById("create-hall-button").addEventListener("click", () => {
+document.getElementById('create-hall-button').addEventListener('click', () => {
   // TODO: Kinosaal anlegen implementieren
 });
 
-document.getElementById("create-show-button").addEventListener("click", () => {
+document.getElementById('create-show-button').addEventListener('click', () => {
   // TODO: Vorstellung anlegen implementieren
 });
 
 // Kunde Seite
-const seatSelectionTitle = document.getElementById("seat-selection-title");
-const seatSelectionHint = document.getElementById("seat-selection-hint");
-const seatSelectionContent = document.getElementById("seat-selection-content");
-const reserveSeatsButton = document.getElementById("reserve-seats-button");
-const seatSelectButtons = document.querySelectorAll(".js-select-seats");
+const seatSelectionTitle = document.getElementById('seat-selection-title');
+const seatSelectionHint = document.getElementById('seat-selection-hint');
+const seatSelectionContent = document.getElementById('seat-selection-content');
+const reserveSeatsButton = document.getElementById('reserve-seats-button');
+const seatSelectButtons = document.querySelectorAll('.js-select-seats');
 
 const updateSeatSelectionTitle = (button) => {
   if (!seatSelectionTitle || !seatSelectionHint) {
@@ -49,19 +49,19 @@ const updateSeatSelectionTitle = (button) => {
 
   const { movie, date, time } = button.dataset;
   seatSelectionTitle.textContent = `Sitzplatzauswahl - ${movie} (${date}, ${time})`;
-  seatSelectionHint.style.display = "none";
-  seatSelectionContent.style.display = "block";
+  seatSelectionHint.style.display = 'none';
+  seatSelectionContent.style.display = 'block';
 };
 
 if (seatSelectionTitle) {
-  seatSelectionTitle.textContent = "";
+  seatSelectionTitle.textContent = '';
 }
 if (seatSelectionContent) {
-  seatSelectionContent.style.display = "none";
+  seatSelectionContent.style.display = 'none';
 }
 
 seatSelectButtons.forEach((button) => {
-  button.addEventListener("click", () => updateSeatSelectionTitle(button));
+  button.addEventListener('click', () => updateSeatSelectionTitle(button));
 });
 
 const markSelectedSeatsAsTaken = () => {
@@ -69,18 +69,18 @@ const markSelectedSeatsAsTaken = () => {
     return;
   }
 
-  const selectedSeats = seatSelectionContent.querySelectorAll(".seat-toggle:checked");
+  const selectedSeats = seatSelectionContent.querySelectorAll('.seat-toggle:checked');
   selectedSeats.forEach((seatToggle) => {
     seatToggle.checked = false;
     seatToggle.disabled = true;
 
     const seatLabel = seatToggle.nextElementSibling;
     if (seatLabel) {
-      seatLabel.classList.add("seat--taken");
+      seatLabel.classList.add('seat--taken');
     }
   });
 };
 
 if (reserveSeatsButton) {
-  reserveSeatsButton.addEventListener("click", markSelectedSeatsAsTaken);
+  reserveSeatsButton.addEventListener('click', markSelectedSeatsAsTaken);
 }
