@@ -38,6 +38,7 @@ document.getElementById("create-show-button").addEventListener("click", () => {
 // Kunde Seite
 const seatSelectionTitle = document.getElementById("seat-selection-title");
 const seatSelectionHint = document.getElementById("seat-selection-hint");
+const seatSelectionContent = document.getElementById("seat-selection-content");
 const seatSelectButtons = document.querySelectorAll(".js-select-seats");
 
 const updateSeatSelectionTitle = (button) => {
@@ -48,10 +49,14 @@ const updateSeatSelectionTitle = (button) => {
   const { movie, date, time } = button.dataset;
   seatSelectionTitle.textContent = `Sitzplatzauswahl - ${movie} (${date}, ${time})`;
   seatSelectionHint.style.display = "none";
+  seatSelectionContent.style.display = "block";
 };
 
 if (seatSelectionTitle) {
   seatSelectionTitle.textContent = "";
+}
+if (seatSelectionContent) {
+  seatSelectionContent.style.display = "none";
 }
 
 seatSelectButtons.forEach((button) => {

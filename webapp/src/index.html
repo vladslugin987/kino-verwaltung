@@ -21,7 +21,7 @@
 
     <h2>Kinoverwaltung</h2>
   </header>
-  
+
   <!-- Betreiber Seite -->
   <div id="operator-page" class="page-view">
     <div class="row">
@@ -217,14 +217,15 @@
 
     <div class="container full-width seat-selection">
       <div class="section-title" id="seat-selection-title"></div>
-      <div id="seat-selection-hint">выберите сначала фильм</div>
+      <div id="seat-selection-hint">Bitte wählen Sie zuerst einen Film.</div>
 
       <label for="customer-name">Ihr Name</label>
       <input id="customer-name" class="form-input" type="text" placeholder="Vor- und Nachname">
 
       <div class="screen">LEINWAND</div>
 
-      <div class="seat-grid">
+      <div id="seat-selection-content">
+        <div class="seat-grid">
         <div class="seat-row">
           <input class="seat-toggle" type="checkbox" id="seat-1">
           <label class="seat" for="seat-1">1</label>
@@ -401,9 +402,9 @@
           <input class="seat-toggle" type="checkbox" id="seat-80">
           <label class="seat" for="seat-80">80</label>
         </div>
-      </div>
+        </div>
 
-      <div class="seat-legend">
+        <div class="seat-legend">
         <div class="legend-item">
           <span class="legend-swatch legend-swatch--free"></span>
           <span>Frei</span>
@@ -416,10 +417,11 @@
           <span class="legend-swatch legend-swatch--taken"></span>
           <span>Belegt</span>
         </div>
-      </div>
+        </div>
 
-      <div class="seat-actions">
-        <button class="button" type="button">Reservieren</button>
+        <div class="seat-actions">
+          <button class="button" type="button">Reservieren</button>
+        </div>
       </div>
     </div>
   </div>
