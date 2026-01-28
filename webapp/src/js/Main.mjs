@@ -34,3 +34,26 @@ document.getElementById("create-hall-button").addEventListener("click", () => {
 document.getElementById("create-show-button").addEventListener("click", () => {
   // TODO: Vorstellung anlegen implementieren
 });
+
+// Kunde Seite
+const seatSelectionTitle = document.getElementById("seat-selection-title");
+const seatSelectionHint = document.getElementById("seat-selection-hint");
+const seatSelectButtons = document.querySelectorAll(".js-select-seats");
+
+const updateSeatSelectionTitle = (button) => {
+  if (!seatSelectionTitle || !seatSelectionHint) {
+    return;
+  }
+
+  const { movie, date, time } = button.dataset;
+  seatSelectionTitle.textContent = `Sitzplatzauswahl - ${movie} (${date}, ${time})`;
+  seatSelectionHint.style.display = "none";
+};
+
+if (seatSelectionTitle) {
+  seatSelectionTitle.textContent = "";
+}
+
+seatSelectButtons.forEach((button) => {
+  button.addEventListener("click", () => updateSeatSelectionTitle(button));
+});

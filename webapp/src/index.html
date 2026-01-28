@@ -21,7 +21,8 @@
 
     <h2>Kinoverwaltung</h2>
   </header>
-
+  
+  <!-- Betreiber Seite -->
   <div id="operator-page" class="page-view">
     <div class="row">
       <div class="container">
@@ -137,6 +138,7 @@
     </div>
   </div>
 
+  <!-- Kunde Seite -->
   <div id="customer-page" class="page-view">
     <div class="container full-width">
       <div class="section-title">Verfügbare Vorstellungen</div>
@@ -156,7 +158,17 @@
           <td>20:00</td>
           <td>Saal 1</td>
           <td>75/80</td>
-          <td><button class="button" type="button">Plätze auswählen</button></td>
+          <td>
+            <button
+              class="button js-select-seats"
+              type="button"
+              data-movie="Interstellar"
+              data-date="24.01.2026"
+              data-time="20:00"
+            >
+              Plätze auswählen
+            </button>
+          </td>
         </tr>
         <tr>
           <td>Inception</td>
@@ -164,7 +176,17 @@
           <td>18:30</td>
           <td>Saal 2</td>
           <td>30/48</td>
-          <td><button class="button" type="button">Plätze auswählen</button></td>
+          <td>
+            <button
+              class="button js-select-seats"
+              type="button"
+              data-movie="Inception"
+              data-date="27.01.2026"
+              data-time="18:30"
+            >
+              Plätze auswählen
+            </button>
+          </td>
         </tr>
         <tr>
           <td>The Matrix</td>
@@ -172,7 +194,17 @@
           <td>21:00</td>
           <td>Saal 3</td>
           <td>80/90</td>
-          <td><button class="button" type="button">Plätze auswählen</button></td>
+          <td>
+            <button
+              class="button js-select-seats"
+              type="button"
+              data-movie="The Matrix"
+              data-date="29.01.2026"
+              data-time="21:00"
+            >
+              Plätze auswählen
+            </button>
+          </td>
         </tr>
       </table>
 
@@ -184,7 +216,8 @@
     </div>
 
     <div class="container full-width seat-selection">
-      <div class="section-title">Sitzplatzauswahl - Interstellar (24.11.2025, 20:00)</div>
+      <div class="section-title" id="seat-selection-title"></div>
+      <div id="seat-selection-hint">выберите сначала фильм</div>
 
       <label for="customer-name">Ihr Name</label>
       <input id="customer-name" class="form-input" type="text" placeholder="Vor- und Nachname">
