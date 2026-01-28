@@ -39,6 +39,7 @@ document.getElementById("create-show-button").addEventListener("click", () => {
 const seatSelectionTitle = document.getElementById("seat-selection-title");
 const seatSelectionHint = document.getElementById("seat-selection-hint");
 const seatSelectionContent = document.getElementById("seat-selection-content");
+const reserveSeatsButton = document.getElementById("reserve-seats-button");
 const seatSelectButtons = document.querySelectorAll(".js-select-seats");
 
 const updateSeatSelectionTitle = (button) => {
@@ -62,3 +63,24 @@ if (seatSelectionContent) {
 seatSelectButtons.forEach((button) => {
   button.addEventListener("click", () => updateSeatSelectionTitle(button));
 });
+
+const markSelectedSeatsAsTaken = () => {
+  if (!seatSelectionContent) {
+    return;
+  }
+
+  const selectedSeats = seatSelectionContent.querySelectorAll(".seat-toggle:checked");
+  selectedSeats.forEach((seatToggle) => {
+    seatToggle.checked = false;
+    seatToggle.disabled = true;
+
+    const seatLabel = seatToggle.nextElementSibling;
+    if (seatLabel) {
+      seatLabel.classList.add("seat--taken");
+    }
+  });
+};
+
+if (reserveSeatsButton) {
+  reserveSeatsButton.addEventListener("click", markSelectedSeatsAsTaken);
+}
