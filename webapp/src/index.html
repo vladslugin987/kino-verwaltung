@@ -27,34 +27,34 @@
     <div class="row">
       <div class="container">
         <div class="section-title">Kinosaal anlegen</div>
-        
+
         <label for="hall-name">Name des Saals</label>
         <input type="text" id="hall-name" class="form-input">
-        
+
         <label for="rows-count">Anzahl der Sitzreihen</label>
         <input type="number" id="rows-count" class="form-input" min="1">
-        
+
         <label for="seats-per-row">Sitze pro Reihe</label>
         <input type="number" id="seats-per-row" class="form-input" min="1">
-        
+
         <button id="create-hall-button" class="submit-button" type="button">Saal anlegen</button>
       </div>
 
       <div class="container">
         <div class="section-title">Vorstellung anlegen</div>
-        
+
         <label for="movie-name">Film</label>
         <input type="text" id="movie-name" class="form-input">
-        
+
         <label for="hall-select">Kinosaal</label>
         <input type="text" id="hall-select" class="form-input">
-        
+
         <label for="show-date">Datum</label>
         <input type="date" id="show-date" class="form-input">
-        
+
         <label for="show-time">Uhrzeit</label>
         <input type="time" id="show-time" class="form-input">
-        
+
         <button id="create-show-button" class="submit-button" type="button">Vorstellung anlegen</button>
       </div>
     </div>
@@ -63,31 +63,25 @@
       <div class="section-title">Kinosäle</div>
 
       <table class="hall-table">
-        <tr>
-          <th>Name</th>
-          <th>Sitzreihen</th>
-          <th>Sitze pro Reihe</th>
-          <th>Gesamtkapazität</th>
-        </tr>
-        <tr>
-          <td>Saal 1</td>
-          <td>10</td>
-          <td>12</td>
-          <td>120</td>
-        </tr>
-        <tr>
-          <td>Saal 2</td>
-          <td>8</td>
-          <td>10</td>
-          <td>80</td>
-        </tr>
-        <tr>
-          <td>Saal 3</td>
-          <td>12</td>
-          <td>14</td>
-          <td>168</td>
-        </tr>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Sitzreihen</th>
+            <th>Sitze pro Reihe</th>
+            <th>Gesamtkapazität</th>
+          </tr>
+        </thead>
+        <tbody id="tableBodyHall"></tbody>
       </table>
+
+      <template id="row-template">
+        <tr>
+          <td class="name"></td>
+          <td class="reihen"></td>
+          <td class="sitze"></td>
+          <td class="gesamtkapazität"></td>
+        </tr>
+      </template>
 
       <div class="table-pagination">
         <button class="button" type="button">&lt;- Zurück</button>
@@ -100,35 +94,27 @@
       <div class="section-title">Vorstellungen</div>
 
       <table class="hall-table">
-        <tr>
+       <thead>
+         <tr>
           <th>Film</th>
           <th>Saal</th>
           <th>Datum</th>
           <th>Uhrzeit</th>
           <th>Verfügbare Plätze</th>
         </tr>
-        <tr>
-          <td>Interstellar</td>
-          <td>Saal 1</td>
-          <td>24.01.2026</td>
-          <td>20:00</td>
-          <td>75/80</td>
-        </tr>
-        <tr>
-          <td>Inception</td>
-          <td>Saal 2</td>
-          <td>27.01.2026</td>
-          <td>18:30</td>
-          <td>30/48</td>
-        </tr>
-        <tr>
-          <td>The Matrix</td>
-          <td>Saal 3</td>
-          <td>29.01.2026</td>
-          <td>21:00</td>
-          <td>80/90</td>
-        </tr>
+       </thead>
+       <tbody id="tableBodyFilm"></tbody>
       </table>
+
+      <template id="movieTemplate">
+        <tr>
+          <td class="movieName"></td>
+          <td class="hall"></td>
+          <td class="date"></td>
+          <td class="time"></td>
+          <td class="availableSeats"></td>
+        </tr>
+      </template>
 
       <div class="table-pagination">
         <button class="button" type="button">&lt;- Zurück</button>
@@ -159,13 +145,8 @@
           <td>Saal 1</td>
           <td>75/80</td>
           <td>
-            <button
-              class="button js-select-seats"
-              type="button"
-              data-movie="Interstellar"
-              data-date="24.01.2026"
-              data-time="20:00"
-            >
+            <button class="button js-select-seats" type="button" data-movie="Interstellar" data-date="24.01.2026"
+              data-time="20:00">
               Plätze auswählen
             </button>
           </td>
@@ -177,13 +158,8 @@
           <td>Saal 2</td>
           <td>30/48</td>
           <td>
-            <button
-              class="button js-select-seats"
-              type="button"
-              data-movie="Inception"
-              data-date="27.01.2026"
-              data-time="18:30"
-            >
+            <button class="button js-select-seats" type="button" data-movie="Inception" data-date="27.01.2026"
+              data-time="18:30">
               Plätze auswählen
             </button>
           </td>
@@ -195,13 +171,8 @@
           <td>Saal 3</td>
           <td>80/90</td>
           <td>
-            <button
-              class="button js-select-seats"
-              type="button"
-              data-movie="The Matrix"
-              data-date="29.01.2026"
-              data-time="21:00"
-            >
+            <button class="button js-select-seats" type="button" data-movie="The Matrix" data-date="29.01.2026"
+              data-time="21:00">
               Plätze auswählen
             </button>
           </td>
@@ -226,197 +197,197 @@
 
       <div id="seat-selection-content">
         <div class="seat-grid">
-        <div class="seat-row">
-          <input class="seat-toggle" type="checkbox" id="seat-1">
-          <label class="seat" for="seat-1">1</label>
-          <input class="seat-toggle" type="checkbox" id="seat-2">
-          <label class="seat" for="seat-2">2</label>
-          <input class="seat-toggle" type="checkbox" id="seat-3">
-          <label class="seat" for="seat-3">3</label>
-          <input class="seat-toggle" type="checkbox" id="seat-4">
-          <label class="seat" for="seat-4">4</label>
-          <input class="seat-toggle" type="checkbox" id="seat-5">
-          <label class="seat" for="seat-5">5</label>
-          <input class="seat-toggle" type="checkbox" id="seat-6">
-          <label class="seat" for="seat-6">6</label>
-          <input class="seat-toggle" type="checkbox" id="seat-7">
-          <label class="seat" for="seat-7">7</label>
-          <input class="seat-toggle" type="checkbox" id="seat-8">
-          <label class="seat" for="seat-8">8</label>
-          <input class="seat-toggle" type="checkbox" id="seat-9">
-          <label class="seat" for="seat-9">9</label>
-          <input class="seat-toggle" type="checkbox" id="seat-10">
-          <label class="seat" for="seat-10">10</label>
-        </div>
-        <div class="seat-row">
-          <input class="seat-toggle" type="checkbox" id="seat-11">
-          <label class="seat" for="seat-11">11</label>
-          <input class="seat-toggle" type="checkbox" id="seat-12">
-          <label class="seat" for="seat-12">12</label>
-          <input class="seat-toggle" type="checkbox" id="seat-13" checked>
-          <label class="seat" for="seat-13">13</label>
-          <input class="seat-toggle" type="checkbox" id="seat-14" checked>
-          <label class="seat" for="seat-14">14</label>
-          <input class="seat-toggle" type="checkbox" id="seat-15">
-          <label class="seat" for="seat-15">15</label>
-          <input class="seat-toggle" type="checkbox" id="seat-16">
-          <label class="seat" for="seat-16">16</label>
-          <input class="seat-toggle" type="checkbox" id="seat-17">
-          <label class="seat" for="seat-17">17</label>
-          <input class="seat-toggle" type="checkbox" id="seat-18">
-          <label class="seat" for="seat-18">18</label>
-          <input class="seat-toggle" type="checkbox" id="seat-19">
-          <label class="seat" for="seat-19">19</label>
-          <input class="seat-toggle" type="checkbox" id="seat-20">
-          <label class="seat" for="seat-20">20</label>
-        </div>
-        <div class="seat-row">
-          <input class="seat-toggle" type="checkbox" id="seat-21">
-          <label class="seat" for="seat-21">21</label>
-          <input class="seat-toggle" type="checkbox" id="seat-22">
-          <label class="seat" for="seat-22">22</label>
-          <input class="seat-toggle" type="checkbox" id="seat-23">
-          <label class="seat" for="seat-23">23</label>
-          <input class="seat-toggle" type="checkbox" id="seat-24">
-          <label class="seat" for="seat-24">24</label>
-          <input class="seat-toggle" type="checkbox" id="seat-25">
-          <label class="seat" for="seat-25">25</label>
-          <input class="seat-toggle" type="checkbox" id="seat-26" disabled>
-          <label class="seat seat--taken" for="seat-26">26</label>
-          <input class="seat-toggle" type="checkbox" id="seat-27">
-          <label class="seat" for="seat-27">27</label>
-          <input class="seat-toggle" type="checkbox" id="seat-28">
-          <label class="seat" for="seat-28">28</label>
-          <input class="seat-toggle" type="checkbox" id="seat-29">
-          <label class="seat" for="seat-29">29</label>
-          <input class="seat-toggle" type="checkbox" id="seat-30">
-          <label class="seat" for="seat-30">30</label>
-        </div>
-        <div class="seat-row">
-          <input class="seat-toggle" type="checkbox" id="seat-31">
-          <label class="seat" for="seat-31">31</label>
-          <input class="seat-toggle" type="checkbox" id="seat-32">
-          <label class="seat" for="seat-32">32</label>
-          <input class="seat-toggle" type="checkbox" id="seat-33">
-          <label class="seat" for="seat-33">33</label>
-          <input class="seat-toggle" type="checkbox" id="seat-34">
-          <label class="seat" for="seat-34">34</label>
-          <input class="seat-toggle" type="checkbox" id="seat-35">
-          <label class="seat" for="seat-35">35</label>
-          <input class="seat-toggle" type="checkbox" id="seat-36">
-          <label class="seat" for="seat-36">36</label>
-          <input class="seat-toggle" type="checkbox" id="seat-37">
-          <label class="seat" for="seat-37">37</label>
-          <input class="seat-toggle" type="checkbox" id="seat-38">
-          <label class="seat" for="seat-38">38</label>
-          <input class="seat-toggle" type="checkbox" id="seat-39" disabled>
-          <label class="seat seat--taken" for="seat-39">39</label>
-          <input class="seat-toggle" type="checkbox" id="seat-40">
-          <label class="seat" for="seat-40">40</label>
-        </div>
-        <div class="seat-row">
-          <input class="seat-toggle" type="checkbox" id="seat-41">
-          <label class="seat" for="seat-41">41</label>
-          <input class="seat-toggle" type="checkbox" id="seat-42">
-          <label class="seat" for="seat-42">42</label>
-          <input class="seat-toggle" type="checkbox" id="seat-43" disabled>
-          <label class="seat seat--taken" for="seat-43">43</label>
-          <input class="seat-toggle" type="checkbox" id="seat-44">
-          <label class="seat" for="seat-44">44</label>
-          <input class="seat-toggle" type="checkbox" id="seat-45">
-          <label class="seat" for="seat-45">45</label>
-          <input class="seat-toggle" type="checkbox" id="seat-46">
-          <label class="seat" for="seat-46">46</label>
-          <input class="seat-toggle" type="checkbox" id="seat-47">
-          <label class="seat" for="seat-47">47</label>
-          <input class="seat-toggle" type="checkbox" id="seat-48">
-          <label class="seat" for="seat-48">48</label>
-          <input class="seat-toggle" type="checkbox" id="seat-49">
-          <label class="seat" for="seat-49">49</label>
-          <input class="seat-toggle" type="checkbox" id="seat-50">
-          <label class="seat" for="seat-50">50</label>
-        </div>
-        <div class="seat-row">
-          <input class="seat-toggle" type="checkbox" id="seat-51">
-          <label class="seat" for="seat-51">51</label>
-          <input class="seat-toggle" type="checkbox" id="seat-52">
-          <label class="seat" for="seat-52">52</label>
-          <input class="seat-toggle" type="checkbox" id="seat-53">
-          <label class="seat" for="seat-53">53</label>
-          <input class="seat-toggle" type="checkbox" id="seat-54">
-          <label class="seat" for="seat-54">54</label>
-          <input class="seat-toggle" type="checkbox" id="seat-55">
-          <label class="seat" for="seat-55">55</label>
-          <input class="seat-toggle" type="checkbox" id="seat-56">
-          <label class="seat" for="seat-56">56</label>
-          <input class="seat-toggle" type="checkbox" id="seat-57">
-          <label class="seat" for="seat-57">57</label>
-          <input class="seat-toggle" type="checkbox" id="seat-58">
-          <label class="seat" for="seat-58">58</label>
-          <input class="seat-toggle" type="checkbox" id="seat-59">
-          <label class="seat" for="seat-59">59</label>
-          <input class="seat-toggle" type="checkbox" id="seat-60">
-          <label class="seat" for="seat-60">60</label>
-        </div>
-        <div class="seat-row">
-          <input class="seat-toggle" type="checkbox" id="seat-61">
-          <label class="seat" for="seat-61">61</label>
-          <input class="seat-toggle" type="checkbox" id="seat-62">
-          <label class="seat" for="seat-62">62</label>
-          <input class="seat-toggle" type="checkbox" id="seat-63">
-          <label class="seat" for="seat-63">63</label>
-          <input class="seat-toggle" type="checkbox" id="seat-64">
-          <label class="seat" for="seat-64">64</label>
-          <input class="seat-toggle" type="checkbox" id="seat-65">
-          <label class="seat" for="seat-65">65</label>
-          <input class="seat-toggle" type="checkbox" id="seat-66">
-          <label class="seat" for="seat-66">66</label>
-          <input class="seat-toggle" type="checkbox" id="seat-67">
-          <label class="seat" for="seat-67">67</label>
-          <input class="seat-toggle" type="checkbox" id="seat-68">
-          <label class="seat" for="seat-68">68</label>
-          <input class="seat-toggle" type="checkbox" id="seat-69">
-          <label class="seat" for="seat-69">69</label>
-          <input class="seat-toggle" type="checkbox" id="seat-70">
-          <label class="seat" for="seat-70">70</label>
-        </div>
-        <div class="seat-row">
-          <input class="seat-toggle" type="checkbox" id="seat-71">
-          <label class="seat" for="seat-71">71</label>
-          <input class="seat-toggle" type="checkbox" id="seat-72">
-          <label class="seat" for="seat-72">72</label>
-          <input class="seat-toggle" type="checkbox" id="seat-73">
-          <label class="seat" for="seat-73">73</label>
-          <input class="seat-toggle" type="checkbox" id="seat-74">
-          <label class="seat" for="seat-74">74</label>
-          <input class="seat-toggle" type="checkbox" id="seat-75">
-          <label class="seat" for="seat-75">75</label>
-          <input class="seat-toggle" type="checkbox" id="seat-76">
-          <label class="seat" for="seat-76">76</label>
-          <input class="seat-toggle" type="checkbox" id="seat-77">
-          <label class="seat" for="seat-77">77</label>
-          <input class="seat-toggle" type="checkbox" id="seat-78">
-          <label class="seat" for="seat-78">78</label>
-          <input class="seat-toggle" type="checkbox" id="seat-79">
-          <label class="seat" for="seat-79">79</label>
-          <input class="seat-toggle" type="checkbox" id="seat-80">
-          <label class="seat" for="seat-80">80</label>
-        </div>
+          <div class="seat-row">
+            <input class="seat-toggle" type="checkbox" id="seat-1">
+            <label class="seat" for="seat-1">1</label>
+            <input class="seat-toggle" type="checkbox" id="seat-2">
+            <label class="seat" for="seat-2">2</label>
+            <input class="seat-toggle" type="checkbox" id="seat-3">
+            <label class="seat" for="seat-3">3</label>
+            <input class="seat-toggle" type="checkbox" id="seat-4">
+            <label class="seat" for="seat-4">4</label>
+            <input class="seat-toggle" type="checkbox" id="seat-5">
+            <label class="seat" for="seat-5">5</label>
+            <input class="seat-toggle" type="checkbox" id="seat-6">
+            <label class="seat" for="seat-6">6</label>
+            <input class="seat-toggle" type="checkbox" id="seat-7">
+            <label class="seat" for="seat-7">7</label>
+            <input class="seat-toggle" type="checkbox" id="seat-8">
+            <label class="seat" for="seat-8">8</label>
+            <input class="seat-toggle" type="checkbox" id="seat-9">
+            <label class="seat" for="seat-9">9</label>
+            <input class="seat-toggle" type="checkbox" id="seat-10">
+            <label class="seat" for="seat-10">10</label>
+          </div>
+          <div class="seat-row">
+            <input class="seat-toggle" type="checkbox" id="seat-11">
+            <label class="seat" for="seat-11">11</label>
+            <input class="seat-toggle" type="checkbox" id="seat-12">
+            <label class="seat" for="seat-12">12</label>
+            <input class="seat-toggle" type="checkbox" id="seat-13" checked>
+            <label class="seat" for="seat-13">13</label>
+            <input class="seat-toggle" type="checkbox" id="seat-14" checked>
+            <label class="seat" for="seat-14">14</label>
+            <input class="seat-toggle" type="checkbox" id="seat-15">
+            <label class="seat" for="seat-15">15</label>
+            <input class="seat-toggle" type="checkbox" id="seat-16">
+            <label class="seat" for="seat-16">16</label>
+            <input class="seat-toggle" type="checkbox" id="seat-17">
+            <label class="seat" for="seat-17">17</label>
+            <input class="seat-toggle" type="checkbox" id="seat-18">
+            <label class="seat" for="seat-18">18</label>
+            <input class="seat-toggle" type="checkbox" id="seat-19">
+            <label class="seat" for="seat-19">19</label>
+            <input class="seat-toggle" type="checkbox" id="seat-20">
+            <label class="seat" for="seat-20">20</label>
+          </div>
+          <div class="seat-row">
+            <input class="seat-toggle" type="checkbox" id="seat-21">
+            <label class="seat" for="seat-21">21</label>
+            <input class="seat-toggle" type="checkbox" id="seat-22">
+            <label class="seat" for="seat-22">22</label>
+            <input class="seat-toggle" type="checkbox" id="seat-23">
+            <label class="seat" for="seat-23">23</label>
+            <input class="seat-toggle" type="checkbox" id="seat-24">
+            <label class="seat" for="seat-24">24</label>
+            <input class="seat-toggle" type="checkbox" id="seat-25">
+            <label class="seat" for="seat-25">25</label>
+            <input class="seat-toggle" type="checkbox" id="seat-26" disabled>
+            <label class="seat seat--taken" for="seat-26">26</label>
+            <input class="seat-toggle" type="checkbox" id="seat-27">
+            <label class="seat" for="seat-27">27</label>
+            <input class="seat-toggle" type="checkbox" id="seat-28">
+            <label class="seat" for="seat-28">28</label>
+            <input class="seat-toggle" type="checkbox" id="seat-29">
+            <label class="seat" for="seat-29">29</label>
+            <input class="seat-toggle" type="checkbox" id="seat-30">
+            <label class="seat" for="seat-30">30</label>
+          </div>
+          <div class="seat-row">
+            <input class="seat-toggle" type="checkbox" id="seat-31">
+            <label class="seat" for="seat-31">31</label>
+            <input class="seat-toggle" type="checkbox" id="seat-32">
+            <label class="seat" for="seat-32">32</label>
+            <input class="seat-toggle" type="checkbox" id="seat-33">
+            <label class="seat" for="seat-33">33</label>
+            <input class="seat-toggle" type="checkbox" id="seat-34">
+            <label class="seat" for="seat-34">34</label>
+            <input class="seat-toggle" type="checkbox" id="seat-35">
+            <label class="seat" for="seat-35">35</label>
+            <input class="seat-toggle" type="checkbox" id="seat-36">
+            <label class="seat" for="seat-36">36</label>
+            <input class="seat-toggle" type="checkbox" id="seat-37">
+            <label class="seat" for="seat-37">37</label>
+            <input class="seat-toggle" type="checkbox" id="seat-38">
+            <label class="seat" for="seat-38">38</label>
+            <input class="seat-toggle" type="checkbox" id="seat-39" disabled>
+            <label class="seat seat--taken" for="seat-39">39</label>
+            <input class="seat-toggle" type="checkbox" id="seat-40">
+            <label class="seat" for="seat-40">40</label>
+          </div>
+          <div class="seat-row">
+            <input class="seat-toggle" type="checkbox" id="seat-41">
+            <label class="seat" for="seat-41">41</label>
+            <input class="seat-toggle" type="checkbox" id="seat-42">
+            <label class="seat" for="seat-42">42</label>
+            <input class="seat-toggle" type="checkbox" id="seat-43" disabled>
+            <label class="seat seat--taken" for="seat-43">43</label>
+            <input class="seat-toggle" type="checkbox" id="seat-44">
+            <label class="seat" for="seat-44">44</label>
+            <input class="seat-toggle" type="checkbox" id="seat-45">
+            <label class="seat" for="seat-45">45</label>
+            <input class="seat-toggle" type="checkbox" id="seat-46">
+            <label class="seat" for="seat-46">46</label>
+            <input class="seat-toggle" type="checkbox" id="seat-47">
+            <label class="seat" for="seat-47">47</label>
+            <input class="seat-toggle" type="checkbox" id="seat-48">
+            <label class="seat" for="seat-48">48</label>
+            <input class="seat-toggle" type="checkbox" id="seat-49">
+            <label class="seat" for="seat-49">49</label>
+            <input class="seat-toggle" type="checkbox" id="seat-50">
+            <label class="seat" for="seat-50">50</label>
+          </div>
+          <div class="seat-row">
+            <input class="seat-toggle" type="checkbox" id="seat-51">
+            <label class="seat" for="seat-51">51</label>
+            <input class="seat-toggle" type="checkbox" id="seat-52">
+            <label class="seat" for="seat-52">52</label>
+            <input class="seat-toggle" type="checkbox" id="seat-53">
+            <label class="seat" for="seat-53">53</label>
+            <input class="seat-toggle" type="checkbox" id="seat-54">
+            <label class="seat" for="seat-54">54</label>
+            <input class="seat-toggle" type="checkbox" id="seat-55">
+            <label class="seat" for="seat-55">55</label>
+            <input class="seat-toggle" type="checkbox" id="seat-56">
+            <label class="seat" for="seat-56">56</label>
+            <input class="seat-toggle" type="checkbox" id="seat-57">
+            <label class="seat" for="seat-57">57</label>
+            <input class="seat-toggle" type="checkbox" id="seat-58">
+            <label class="seat" for="seat-58">58</label>
+            <input class="seat-toggle" type="checkbox" id="seat-59">
+            <label class="seat" for="seat-59">59</label>
+            <input class="seat-toggle" type="checkbox" id="seat-60">
+            <label class="seat" for="seat-60">60</label>
+          </div>
+          <div class="seat-row">
+            <input class="seat-toggle" type="checkbox" id="seat-61">
+            <label class="seat" for="seat-61">61</label>
+            <input class="seat-toggle" type="checkbox" id="seat-62">
+            <label class="seat" for="seat-62">62</label>
+            <input class="seat-toggle" type="checkbox" id="seat-63">
+            <label class="seat" for="seat-63">63</label>
+            <input class="seat-toggle" type="checkbox" id="seat-64">
+            <label class="seat" for="seat-64">64</label>
+            <input class="seat-toggle" type="checkbox" id="seat-65">
+            <label class="seat" for="seat-65">65</label>
+            <input class="seat-toggle" type="checkbox" id="seat-66">
+            <label class="seat" for="seat-66">66</label>
+            <input class="seat-toggle" type="checkbox" id="seat-67">
+            <label class="seat" for="seat-67">67</label>
+            <input class="seat-toggle" type="checkbox" id="seat-68">
+            <label class="seat" for="seat-68">68</label>
+            <input class="seat-toggle" type="checkbox" id="seat-69">
+            <label class="seat" for="seat-69">69</label>
+            <input class="seat-toggle" type="checkbox" id="seat-70">
+            <label class="seat" for="seat-70">70</label>
+          </div>
+          <div class="seat-row">
+            <input class="seat-toggle" type="checkbox" id="seat-71">
+            <label class="seat" for="seat-71">71</label>
+            <input class="seat-toggle" type="checkbox" id="seat-72">
+            <label class="seat" for="seat-72">72</label>
+            <input class="seat-toggle" type="checkbox" id="seat-73">
+            <label class="seat" for="seat-73">73</label>
+            <input class="seat-toggle" type="checkbox" id="seat-74">
+            <label class="seat" for="seat-74">74</label>
+            <input class="seat-toggle" type="checkbox" id="seat-75">
+            <label class="seat" for="seat-75">75</label>
+            <input class="seat-toggle" type="checkbox" id="seat-76">
+            <label class="seat" for="seat-76">76</label>
+            <input class="seat-toggle" type="checkbox" id="seat-77">
+            <label class="seat" for="seat-77">77</label>
+            <input class="seat-toggle" type="checkbox" id="seat-78">
+            <label class="seat" for="seat-78">78</label>
+            <input class="seat-toggle" type="checkbox" id="seat-79">
+            <label class="seat" for="seat-79">79</label>
+            <input class="seat-toggle" type="checkbox" id="seat-80">
+            <label class="seat" for="seat-80">80</label>
+          </div>
         </div>
 
         <div class="seat-legend">
-        <div class="legend-item">
-          <span class="legend-swatch legend-swatch--free"></span>
-          <span>Frei</span>
-        </div>
-        <div class="legend-item">
-          <span class="legend-swatch legend-swatch--selected"></span>
-          <span>Ausgewählt</span>
-        </div>
-        <div class="legend-item">
-          <span class="legend-swatch legend-swatch--taken"></span>
-          <span>Belegt</span>
-        </div>
+          <div class="legend-item">
+            <span class="legend-swatch legend-swatch--free"></span>
+            <span>Frei</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-swatch legend-swatch--selected"></span>
+            <span>Ausgewählt</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-swatch legend-swatch--taken"></span>
+            <span>Belegt</span>
+          </div>
         </div>
 
         <div class="seat-actions">

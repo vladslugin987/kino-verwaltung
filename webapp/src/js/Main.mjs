@@ -27,12 +27,56 @@ customerButton.addEventListener('click', () => {
 
 setActiveRole('operator');
 
+// creating the hall
+
+const nameInput = document.getElementById("hall-name");
+const rowInput = document.getElementById("rows-count");
+const seatsPerRowInput = document.getElementById("seats-per-row");
+const tableBody = document.getElementById("tableBodyHall");
+const template = document.getElementById("row-template");
+
+
 document.getElementById('create-hall-button').addEventListener('click', () => {
-  // TODO: Kinosaal anlegen implementieren
+  const name = nameInput.value;
+  const rows = rowInput.value;
+  const seatsPerRow = seatsPerRowInput.value;
+
+  
+  const clone = template.content.cloneNode(true);
+
+  
+  clone.querySelector(".name").textContent = name;
+  clone.querySelector(".reihen").textContent = rows;
+  clone.querySelector(".sitze").textContent = seatsPerRow;
+  clone.querySelector(".gesamtkapazität").textContent = rows * seatsPerRow;
+
+  tableBody.appendChild(clone);
 });
 
+//create movie
+
+const movieNameInput = document.getElementById("movie-name");
+const hallInput = document.getElementById("hall-select");
+const dateInput = document.getElementById("show-date");
+const timeInput = document.getElementById("show-time");
+const tableBodyFilm = document.getElementById("tableBodyFilm");
+const movieTemplate = document.getElementById("movieTemplate");
+
 document.getElementById('create-show-button').addEventListener('click', () => {
-  // TODO: Vorstellung anlegen implementieren
+  const movie = movieNameInput.value;
+  const hall = hallInput.value;
+  const date = dateInput.value;
+  const time = timeInput.value;
+
+  const clone = movieTemplate.content.cloneNode(true);
+
+  clone.querySelector(".movieName").textContent = movie;
+  clone.querySelector(".hall").textContent = hall;
+  clone.querySelector(".date").textContent = date;
+  clone.querySelector(".time").textContent = time;
+  clone.querySelector(".availableSeats").textContent = 80; //TODO: insert variable 
+
+  tableBodyFilm.appendChild(clone);
 });
 
 // Kunde Seite
