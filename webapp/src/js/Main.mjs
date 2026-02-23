@@ -27,12 +27,25 @@ customerButton.addEventListener('click', () => {
 
 setActiveRole('operator');
 
+//functions for operator
+
+//restrict the items in the movie table per page to 3
+let shows = [];
+let currentMoviePage = 1;
+const itemsPerMoviePage = 3;
+
+//restrict the items in the hall table per page to 3
+
+let halls = [];
+let currentHallPage = 1;
+const itemsPerHallPage = 3;
+
 // creating the hall
 
 const nameInput = document.getElementById("hall-name");
 const rowInput = document.getElementById("rows-count");
 const seatsPerRowInput = document.getElementById("seats-per-row");
-const tableBody = document.getElementById("tableBodyHall");
+const tableBodyHall = document.getElementById("tableBodyHall");
 const template = document.getElementById("row-template");
 
 
@@ -50,9 +63,40 @@ document.getElementById('create-hall-button').addEventListener('click', () => {
   clone.querySelector(".sitze").textContent = seatsPerRow;
   clone.querySelector(".gesamtkapazität").textContent = rows * seatsPerRow;
 
-  tableBody.appendChild(clone);
+  let all = rows * seatsPerRow;
+  halls.push({
+    name,
+    rows,
+    seatsPerRow,
+    all,
+  });
+  renderHallTable();
 });
 
+const hallPageInfo = document.getElementById("infoHall");
+function renderHallTable(){
+  tableBodyHall.innerHTML = "";
+
+  const start = (currentHallPage - 1) * itemsPerHallPage;
+  const end = start + itemsPerHallPage;
+
+  const totalPages = Math.max(1, Math.ceil(halls.length / itemsPerHallPage));
+
+  const pageItems = halls.slice(start, end);
+
+  pageItems.forEach(hall => {
+    const clone = template.content.cloneNode(true);
+
+    clone.querySelector(".name").textContent = hall.name;
+    clone.querySelector(".reihen").textContent = hall.rows;
+    clone.querySelector(".sitze").textContent = hall.seatsPerRow;
+    clone.querySelector(".gesamtkapazität").textContent = hall.all;
+
+    tableBodyHall.appendChild(clone);
+  });
+   hallPageInfo.textContent = `Seite ${currentHallPage} von ${totalPages}`;
+
+}
 //create movie
 
 const movieNameInput = document.getElementById("movie-name");
@@ -76,8 +120,74 @@ document.getElementById('create-show-button').addEventListener('click', () => {
   clone.querySelector(".time").textContent = time;
   clone.querySelector(".availableSeats").textContent = 80; //TODO: insert variable 
 
-  tableBodyFilm.appendChild(clone);
+  shows.push({
+  movie,
+  hall,
+  date,
+  time,
+  seats: 80
 });
+
+renderMovieTable();
+});
+
+const moviePageInfo = document.getElementById("infoMovie");
+
+function renderMovieTable() {
+  tableBodyFilm.innerHTML = "";
+
+  const start = (currentMoviePage - 1) * itemsPerMoviePage;
+  const end = start + itemsPerMoviePage;
+
+  const totalPages = Math.max(1, Math.ceil(shows.length / itemsPerMoviePage));
+
+  const pageItems = shows.slice(start, end);
+
+  pageItems.forEach(show => {
+    const clone = movieTemplate.content.cloneNode(true);
+
+    clone.querySelector(".movieName").textContent = show.movie;
+    clone.querySelector(".hall").textContent = show.hall;
+    clone.querySelector(".date").textContent = show.date;
+    clone.querySelector(".time").textContent = show.time;
+    clone.querySelector(".availableSeats").textContent = show.seats;
+
+    tableBodyFilm.appendChild(clone);
+  });
+
+  moviePageInfo.textContent = `Seite ${currentMoviePage} von ${totalPages}`;
+}
+
+//toggle halls and movies
+//halls
+document.getElementById("prevButtonHall").addEventListener("click", () => {
+  if (currentHallPage > 1) {
+    currentHallPage--;
+    renderHallTable();
+  }
+});
+
+document.getElementById("nextButtonHall").addEventListener("click", () => {
+  if (currentHallPage * itemsPerHallPage < halls.length) {
+    currentHallPage++;
+    renderHallTable();
+  }
+});
+//shows
+document.getElementById("prevButtonMovie").addEventListener("click", () => {
+  if (currentMoviePage > 1) {
+    currentMoviePage--;
+    renderMovieTable();
+  }
+});
+
+document.getElementById("nextButtonMovie").addEventListener("click", () => {
+  if (currentMoviePage * itemsPerMoviePage < shows.length) {
+    currentMoviePage++;
+    renderMovieTable();
+  }
+});
+
 
 // Kunde Seite
 const seatSelectionTitle = document.getElementById('seat-selection-title');
