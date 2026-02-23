@@ -40,6 +40,15 @@ let halls = [];
 let currentHallPage = 1;
 const itemsPerHallPage = 3;
 
+//restrict the items in the customer table per page to 3
+
+let currentCustomerPage = 1;
+const itemsPerCustomerPage = 3;
+
+//variable for selected movies
+
+let currentSelectedShowIndex = null;
+
 // creating the hall
 
 const nameInput = document.getElementById("hall-name");
@@ -54,10 +63,10 @@ document.getElementById('create-hall-button').addEventListener('click', () => {
   const rows = rowInput.value;
   const seatsPerRow = seatsPerRowInput.value;
 
-  
+
   const clone = template.content.cloneNode(true);
 
-  
+
   clone.querySelector(".name").textContent = name;
   clone.querySelector(".reihen").textContent = rows;
   clone.querySelector(".sitze").textContent = seatsPerRow;
@@ -74,7 +83,8 @@ document.getElementById('create-hall-button').addEventListener('click', () => {
 });
 
 const hallPageInfo = document.getElementById("infoHall");
-function renderHallTable(){
+
+function renderHallTable() {
   tableBodyHall.innerHTML = "";
 
   const start = (currentHallPage - 1) * itemsPerHallPage;
@@ -94,7 +104,7 @@ function renderHallTable(){
 
     tableBodyHall.appendChild(clone);
   });
-   hallPageInfo.textContent = `Seite ${currentHallPage} von ${totalPages}`;
+  hallPageInfo.textContent = `Seite ${currentHallPage} von ${totalPages}`;
 
 }
 //create movie
@@ -108,27 +118,31 @@ const movieTemplate = document.getElementById("movieTemplate");
 
 document.getElementById('create-show-button').addEventListener('click', () => {
   const movie = movieNameInput.value;
-  const hall = hallInput.value;
+  const hallName = hallInput.value;
   const date = dateInput.value;
   const time = timeInput.value;
 
-  const clone = movieTemplate.content.cloneNode(true);
+  //find hall
+  const hallObj = halls.find(h => h.name === hallName);
 
-  clone.querySelector(".movieName").textContent = movie;
-  clone.querySelector(".hall").textContent = hall;
-  clone.querySelector(".date").textContent = date;
-  clone.querySelector(".time").textContent = time;
-  clone.querySelector(".availableSeats").textContent = 80; //TODO: insert variable 
+  if (!hallObj) {
+    alert("Saal existiert nicht!");
+    return;
+  }
+
+  const totalSeats = hallObj.all;
 
   shows.push({
-  movie,
-  hall,
-  date,
-  time,
-  seats: 80
-});
+    movie,
+    hall: hallName,
+    date,
+    time,
+    totalSeats,
+    reservedSeats: 0,
+  });
 
-renderMovieTable();
+  renderMovieTable();
+  renderCustomerTable();
 });
 
 const moviePageInfo = document.getElementById("infoMovie");
@@ -150,7 +164,8 @@ function renderMovieTable() {
     clone.querySelector(".hall").textContent = show.hall;
     clone.querySelector(".date").textContent = show.date;
     clone.querySelector(".time").textContent = show.time;
-    clone.querySelector(".availableSeats").textContent = show.seats;
+    clone.querySelector(".availableSeats").textContent =
+      `${show.totalSeats - show.reservedSeats}/${show.totalSeats}`;
 
     tableBodyFilm.appendChild(clone);
   });
@@ -189,12 +204,61 @@ document.getElementById("nextButtonMovie").addEventListener("click", () => {
 });
 
 
-// Kunde Seite
+// Customer page
+
+//make customer table
+const tableBodyCustomer = document.getElementById("tableBodyCustomer");
+const customerTemplate = document.getElementById("customerMovieTemplate");
+const customerPageInfo = document.getElementById("infoCustomer");
+
+function renderCustomerTable() {
+  if (!tableBodyCustomer) return;
+
+  tableBodyCustomer.innerHTML = "";
+
+  const start = (currentCustomerPage - 1) * itemsPerCustomerPage;
+  const end = start + itemsPerCustomerPage;
+
+  const totalPages = Math.max(1, Math.ceil(shows.length / itemsPerCustomerPage));
+
+  const pageItems = shows.slice(start, end);
+
+  pageItems.forEach((show, index) => {
+    const clone = customerTemplate.content.cloneNode(true);
+
+    const available = show.totalSeats - show.reservedSeats;
+
+    clone.querySelector(".c-movie").textContent = show.movie;
+    clone.querySelector(".c-date").textContent = show.date;
+    clone.querySelector(".c-time").textContent = show.time;
+    clone.querySelector(".c-hall").textContent = show.hall;
+    clone.querySelector(".c-available").textContent =
+      `${available}/${show.totalSeats}`;
+
+    const button = clone.querySelector(".js-select-seats");
+
+    // WICHTIG: richtiger globaler Index wegen Pagination
+    const globalIndex = start + index;
+
+    button.dataset.index = globalIndex;
+    button.dataset.movie = show.movie;
+    button.dataset.date = show.date;
+    button.dataset.time = show.time;
+
+    button.addEventListener("click", () => {
+      currentSelectedShowIndex = globalIndex;
+      updateSeatSelectionTitle(button);
+    });
+
+    tableBodyCustomer.appendChild(clone);
+  });
+
+  customerPageInfo.textContent = `Seite ${currentCustomerPage} von ${totalPages}`;
+}
 const seatSelectionTitle = document.getElementById('seat-selection-title');
 const seatSelectionHint = document.getElementById('seat-selection-hint');
 const seatSelectionContent = document.getElementById('seat-selection-content');
 const reserveSeatsButton = document.getElementById('reserve-seats-button');
-const seatSelectButtons = document.querySelectorAll('.js-select-seats');
 
 const updateSeatSelectionTitle = (button) => {
   if (!seatSelectionTitle || !seatSelectionHint) {
@@ -214,27 +278,47 @@ if (seatSelectionContent) {
   seatSelectionContent.style.display = 'none';
 }
 
-seatSelectButtons.forEach((button) => {
-  button.addEventListener('click', () => updateSeatSelectionTitle(button));
-});
 
 const markSelectedSeatsAsTaken = () => {
-  if (!seatSelectionContent) {
+  if (currentSelectedShowIndex === null) return;
+
+  const show = shows[currentSelectedShowIndex];
+
+  if (!show) {
     return;
   }
 
   const selectedSeats = seatSelectionContent.querySelectorAll('.seat-toggle:checked');
+  const newlyReserved = selectedSeats.length;
+
+  show.reservedSeats += newlyReserved;
+
   selectedSeats.forEach((seatToggle) => {
     seatToggle.checked = false;
     seatToggle.disabled = true;
-
-    const seatLabel = seatToggle.nextElementSibling;
-    if (seatLabel) {
-      seatLabel.classList.add('seat--taken');
-    }
   });
+
+  renderCustomerTable();
+  renderMovieTable();
+
 };
 
 if (reserveSeatsButton) {
   reserveSeatsButton.addEventListener('click', markSelectedSeatsAsTaken);
 }
+
+// toggle on customer page
+
+document.getElementById("prevCustomerButton")?.addEventListener("click", () => {
+  if (currentCustomerPage > 1) {
+    currentCustomerPage--;
+    renderCustomerTable();
+  }
+});
+
+document.getElementById("nextCustomerButton")?.addEventListener("click", () => {
+  if (currentCustomerPage * itemsPerCustomerPage < shows.length) {
+    currentCustomerPage++;
+    renderCustomerTable();
+  }
+});

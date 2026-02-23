@@ -94,16 +94,16 @@
       <div class="section-title">Vorstellungen</div>
 
       <table class="hall-table">
-       <thead>
-         <tr>
-          <th>Film</th>
-          <th>Saal</th>
-          <th>Datum</th>
-          <th>Uhrzeit</th>
-          <th>Verfügbare Plätze</th>
-        </tr>
-       </thead>
-       <tbody id="tableBodyFilm"></tbody>
+        <thead>
+          <tr>
+            <th>Film</th>
+            <th>Saal</th>
+            <th>Datum</th>
+            <th>Uhrzeit</th>
+            <th>Verfügbare Plätze</th>
+          </tr>
+        </thead>
+        <tbody id="tableBodyFilm"></tbody>
       </table>
 
       <template id="movieTemplate">
@@ -130,59 +130,37 @@
       <div class="section-title">Verfügbare Vorstellungen</div>
 
       <table class="hall-table">
-        <tr>
-          <th>Film</th>
-          <th>Datum</th>
-          <th>Uhrzeit</th>
-          <th>Saal</th>
-          <th>Verfügbar</th>
-          <th>Reservierung</th>
-        </tr>
-        <tr>
-          <td>Interstellar</td>
-          <td>24.01.2026</td>
-          <td>20:00</td>
-          <td>Saal 1</td>
-          <td>75/80</td>
-          <td>
-            <button class="button js-select-seats" type="button" data-movie="Interstellar" data-date="24.01.2026"
-              data-time="20:00">
-              Plätze auswählen
-            </button>
-          </td>
-        </tr>
-        <tr>
-          <td>Inception</td>
-          <td>27.01.2026</td>
-          <td>18:30</td>
-          <td>Saal 2</td>
-          <td>30/48</td>
-          <td>
-            <button class="button js-select-seats" type="button" data-movie="Inception" data-date="27.01.2026"
-              data-time="18:30">
-              Plätze auswählen
-            </button>
-          </td>
-        </tr>
-        <tr>
-          <td>The Matrix</td>
-          <td>29.01.2026</td>
-          <td>21:00</td>
-          <td>Saal 3</td>
-          <td>80/90</td>
-          <td>
-            <button class="button js-select-seats" type="button" data-movie="The Matrix" data-date="29.01.2026"
-              data-time="21:00">
-              Plätze auswählen
-            </button>
-          </td>
-        </tr>
+        <thead>
+          <tr>
+            <th>Film</th>
+            <th>Datum</th>
+            <th>Uhrzeit</th>
+            <th>Saal</th>
+            <th>Verfügbar</th>
+            <th>Reservierung</th>
+          </tr>
+        </thead>
+        <tbody id="tableBodyCustomer"></tbody>
       </table>
+      <template id="customerMovieTemplate">
+        <tr>
+          <td class="c-movie"></td>
+          <td class="c-date"></td>
+          <td class="c-time"></td>
+          <td class="c-hall"></td>
+          <td class="c-available"></td>
+          <td>
+            <button class="button js-select-seats" type="button">
+              Plätze auswählen
+            </button>
+          </td>
+        </tr>
+      </template>
 
       <div class="table-pagination">
-        <button class="button" type="button">&lt;- Zurück</button>
-        <span>Seite 1 von 1</span>
-        <button class="button" type="button">Weiter -&gt;</button>
+        <button class="button" id="prevCustomerButton" type="button">&lt;- Zurück</button>
+        <span id="infoCustomer">Seite 1 von 1</span>
+        <button class="button" id="nextCustomerButton" type="button">Weiter -&gt;</button>
       </div>
     </div>
 
