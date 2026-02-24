@@ -65,11 +65,17 @@ function setActiveRole (role) {
     customerPage.style.display = 'none';
     operatorButton.classList.add('is-active');
     customerButton.classList.remove('is-active');
+    recalculateItemsPerPage();
+    renderHallTable();
+    renderMovieTable();
+    renderReservationsTable();
   } else {
     customerPage.style.display = 'block';
     operatorPage.style.display = 'none';
     customerButton.classList.add('is-active');
     operatorButton.classList.remove('is-active');
+    recalculateItemsPerPage();
+    renderCustomerTable();
   }
 }
 
@@ -173,7 +179,7 @@ function calculateItemsPerPageForTable (tableBody, paginationElement) {
   const freeSpace = window.innerHeight - tableRect.top - paginationHeight - 20;
   let itemsPerPage = Math.floor(freeSpace / rowHeight);
 
-  if (itemsPerPage < 1) itemsPerPage = 1;
+  if (!Number.isFinite(itemsPerPage) || itemsPerPage < 1) itemsPerPage = 1;
   return itemsPerPage;
 }
 
