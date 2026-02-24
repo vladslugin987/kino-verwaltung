@@ -20,12 +20,19 @@
     </div>
 
     <h2>Kinoverwaltung</h2>
+
+    <div class="right-header-info">
+      <div>Web-Entwicklung</div>
+      <div>Hausarbeit im Wintersemester 2025/26</div>
+      <div>Sofie Halbedl</div>
+      <div>Vladislav Slugin</div>
+    </div>
   </header>
 
   <!-- Betreiber Seite -->
   <div id="operator-page" class="page-view">
     <div class="row">
-      <div class="container">
+      <div class="container create-panel">
         <div class="section-title">Kinosaal anlegen</div>
 
         <label for="hall-name">Name des Saals</label>
@@ -40,90 +47,97 @@
         <button id="create-hall-button" class="submit-button" type="button">Saal anlegen</button>
       </div>
 
-      <div class="container">
+      <div class="container create-panel">
         <div class="section-title">Vorstellung anlegen</div>
 
         <label for="movie-name">Film</label>
         <input type="text" id="movie-name" class="form-input">
 
         <label for="hall-select">Kinosaal</label>
-        <input type="text" id="hall-select" class="form-input">
+        <select id="hall-select" class="form-input"></select>
 
-        <label for="show-date">Datum</label>
-        <input type="date" id="show-date" class="form-input">
-
-        <label for="show-time">Uhrzeit</label>
-        <input type="time" id="show-time" class="form-input">
+        <div class="date-time-row">
+          <div class="date-time-col">
+            <label for="show-date">Datum</label>
+            <input type="date" id="show-date" class="form-input" max="9999-12-31">
+          </div>
+          <div class="date-time-col">
+            <label for="show-time">Uhrzeit</label>
+            <input type="time" id="show-time" class="form-input">
+          </div>
+        </div>
 
         <button id="create-show-button" class="submit-button" type="button">Vorstellung anlegen</button>
       </div>
     </div>
 
-    <div class="container full-width">
-      <div class="section-title">Kinosäle</div>
+    <div class="row compact-tables">
+      <div class="container create-panel">
+        <div class="section-title">Kinosäle</div>
 
-      <table class="hall-table">
-        <thead>
+        <table class="hall-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Sitzreihen</th>
+              <th>Sitze pro Reihe</th>
+              <th>Gesamtkapazität</th>
+            </tr>
+          </thead>
+          <tbody id="tableBodyHall"></tbody>
+        </table>
+
+        <template id="row-template">
           <tr>
-            <th>Name</th>
-            <th>Sitzreihen</th>
-            <th>Sitze pro Reihe</th>
-            <th>Gesamtkapazität</th>
+            <td class="name"></td>
+            <td class="reihen"></td>
+            <td class="sitze"></td>
+            <td class="gesamtkapazität"></td>
           </tr>
-        </thead>
-        <tbody id="tableBodyHall"></tbody>
-      </table>
+        </template>
 
-      <template id="row-template">
-        <tr>
-          <td class="name"></td>
-          <td class="reihen"></td>
-          <td class="sitze"></td>
-          <td class="gesamtkapazität"></td>
-        </tr>
-      </template>
+        <div class="table-pagination">
+          <button class="button" id="prevButtonHall" type="button">&lt;- Zurück</button>
+          <span id="infoHall">Seite 1 von 1</span>
+          <button class="button" id="nextButtonHall" type="button">Weiter -&gt;</button>
+        </div>
+      </div>
 
-      <div class="table-pagination">
-        <button class="button" id="prevButtonHall" type="button">&lt;- Zurück</button>
-        <span id="infoHall">Seite 1 von 1</span>
-        <button class="button" id="nextButtonHall" type="button">Weiter -&gt;</button>
+      <div class="container create-panel">
+        <div class="section-title">Vorstellungen</div>
+
+        <table class="hall-table">
+          <thead>
+            <tr>
+              <th>Film</th>
+              <th>Saal</th>
+              <th>Datum</th>
+              <th>Uhrzeit</th>
+              <th>Verfügbare Plätze</th>
+            </tr>
+          </thead>
+          <tbody id="tableBodyFilm"></tbody>
+        </table>
+
+        <template id="movieTemplate">
+          <tr>
+            <td class="movieName"></td>
+            <td class="hall"></td>
+            <td class="date"></td>
+            <td class="time"></td>
+            <td class="availableSeats"></td>
+          </tr>
+        </template>
+
+        <div class="table-pagination">
+          <button class="button" id="prevButtonMovie" type="button">&lt;- Zurück</button>
+          <span id="infoMovie"> Seite 1 von 1</span>
+          <button class="button" id="nextButtonMovie" type="button">Weiter -&gt;</button>
+        </div>
       </div>
     </div>
 
-    <div class="container full-width">
-      <div class="section-title">Vorstellungen</div>
-
-      <table class="hall-table">
-        <thead>
-          <tr>
-            <th>Film</th>
-            <th>Saal</th>
-            <th>Datum</th>
-            <th>Uhrzeit</th>
-            <th>Verfügbare Plätze</th>
-          </tr>
-        </thead>
-        <tbody id="tableBodyFilm"></tbody>
-      </table>
-
-      <template id="movieTemplate">
-        <tr>
-          <td class="movieName"></td>
-          <td class="hall"></td>
-          <td class="date"></td>
-          <td class="time"></td>
-          <td class="availableSeats"></td>
-        </tr>
-      </template>
-
-      <div class="table-pagination">
-        <button class="button" id="prevButtonMovie" type="button">&lt;- Zurück</button>
-        <span id="infoMovie"> Seite 1 von 1</span>
-        <button class="button" id="nextButtonMovie" type="button">Weiter -&gt;</button>
-      </div>
-    </div>
-
-    <div class="container full-width">
+    <div class="container full-width create-panel">
       <div class="section-title">Reservierungen</div>
 
       <table class="hall-table">
@@ -135,6 +149,7 @@
             <th>Uhrzeit</th>
             <th>Kunde</th>
             <th>Sitze</th>
+            <th>Aktionen</th>
           </tr>
         </thead>
         <tbody id="tableBodyReservations"></tbody>
@@ -148,14 +163,27 @@
           <td class="r-time"></td>
           <td class="r-customer"></td>
           <td class="r-seats"></td>
+          <td class="r-actions">
+            <button class="button r-ticket-button" type="button">Ticket</button>
+          </td>
         </tr>
       </template>
+
+      <div id="operator-reservation-ticket" class="reservation-ticket">
+        <div class="reservation-ticket-title">Reservierungsbestätigung</div>
+        <img id="operator-reservation-qr" alt="QR Code für Reservierung">
+        <p id="operator-reservation-ticket-text"></p>
+        <div class="ticket-actions">
+          <button id="print-operator-reservation-button" class="button print-ticket-button" type="button">Drucken</button>
+          <button id="close-operator-reservation-button" class="button close-ticket-button" type="button">Schließen</button>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- Kunde Seite -->
   <div id="customer-page" class="page-view">
-    <div class="container full-width">
+    <div class="container full-width create-panel">
       <div class="section-title">Verfügbare Vorstellungen</div>
 
       <table class="hall-table">
@@ -193,7 +221,7 @@
       </div>
     </div>
 
-    <div class="container full-width seat-selection">
+    <div class="container full-width seat-selection create-panel">
       <div class="section-title" id="seat-selection-title"></div>
       <div id="seat-selection-hint">Bitte wählen Sie zuerst einen Film.</div>
 
@@ -228,7 +256,10 @@
           <div class="reservation-ticket-title">Reservierungsbestätigung</div>
           <img id="reservation-qr" alt="QR Code für Reservierung">
           <p id="reservation-ticket-text"></p>
-          <button id="print-reservation-button" class="button" type="button">Drucken</button>
+          <div class="ticket-actions">
+            <button id="print-reservation-button" class="button print-ticket-button" type="button">Drucken</button>
+            <button id="close-reservation-button" class="button close-ticket-button" type="button">Schließen</button>
+          </div>
         </div>
       </div>
     </div>

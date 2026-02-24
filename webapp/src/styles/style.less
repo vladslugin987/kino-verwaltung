@@ -70,6 +70,16 @@ body {
     position: absolute;
 }
 
+.right-header-info {
+    position: absolute;
+    right: 2.5%;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: right;
+    font-size: 0.8rem;
+    line-height: 1.25;
+}
+
 .button-row {
     display: flex;
     gap: 5px;
@@ -94,10 +104,9 @@ body {
     .font-base();
     display: flex;
     flex-direction: column;
-    padding: 0.75rem 1rem;
-    margin: 0.5rem 0;
+    padding: 0.55rem 0.75rem;
+    margin: 0.2rem 0;
     width: 100%;
-    height: 25rem;
     border-radius: @radius-sm;
     border: 1px solid #d9d9d9;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
@@ -110,7 +119,7 @@ body {
 }
 
 .section-title {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     color: @text-default;
     padding-bottom: 0.5rem;
     font-weight: bold;
@@ -118,7 +127,7 @@ body {
 
 .form-input {
     width: 65%;
-    margin: 0.5rem 0 0.75rem;
+    margin: 0.35rem 0 0.55rem;
     height: 1.5rem;
     padding: 0.25rem 0.5rem;
     .font-base();
@@ -129,7 +138,7 @@ body {
 
 label {
     display: block;
-    margin-top: 0.5rem;
+    margin-top: 0.35rem;
     font-weight: 500;
 }
 
@@ -169,7 +178,7 @@ label {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    margin-top: auto;
+    margin-top: 0.35rem;
     align-self: flex-end;
 
     &:hover {
@@ -182,13 +191,35 @@ label {
     flex-direction: row;
     width: 100%;
     margin: 0 auto;
-    gap: 2rem;
+    gap: 1rem;
     overflow-x: auto;
     justify-content: center;
 }
 
 .row .container {
     flex: 1;
+}
+
+.create-panel {
+    border: 1px solid #d0b6ff;
+    background: linear-gradient(180deg, #fcf9ff 0%, #ffffff 100%);
+}
+
+.compact-tables .container {
+    min-height: 20rem;
+}
+
+.date-time-row {
+    display: flex;
+    gap: 0.6rem;
+}
+
+.date-time-col {
+    flex: 1;
+}
+
+.date-time-col .form-input {
+    width: 100%;
 }
 
 .seat-selection {
@@ -337,17 +368,33 @@ label {
     line-height: 1.3;
 }
 
+.r-actions {
+    display: flex;
+    gap: 0.35rem;
+}
+
+.r-actions .button {
+    height: auto;
+    padding: 0.15rem 0.45rem;
+}
+
+.ticket-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
 @media print {
     body * {
         visibility: hidden;
     }
 
-    #reservation-ticket,
-    #reservation-ticket * {
+    .reservation-ticket.print-target,
+    .reservation-ticket.print-target * {
         visibility: visible;
     }
 
-    #reservation-ticket {
+    .reservation-ticket.print-target {
         position: absolute;
         left: 50%;
         top: 20px;
@@ -359,7 +406,7 @@ label {
         background: #fff;
     }
 
-    #print-reservation-button {
+    .print-ticket-button {
         display: none;
     }
 }
