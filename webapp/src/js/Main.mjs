@@ -3,7 +3,44 @@ const customerPage = document.getElementById('customer-page');
 const operatorButton = document.getElementById('operator-button');
 const customerButton = document.getElementById('customer-button');
 
-const setActiveRole = (role) => {
+const shows = [];
+const halls = [];
+const reservations = [];
+
+let currentMoviePage = 1;
+let currentHallPage = 1;
+let currentCustomerPage = 1;
+let currentSelectedShowIndex = null;
+
+const itemsPerMoviePage = 3;
+const itemsPerHallPage = 3;
+const itemsPerCustomerPage = 3;
+
+const nameInput = document.getElementById('hall-name');
+const rowInput = document.getElementById('rows-count');
+const seatsPerRowInput = document.getElementById('seats-per-row');
+const tableBodyHall = document.getElementById('tableBodyHall');
+const template = document.getElementById('row-template');
+const hallPageInfo = document.getElementById('infoHall');
+
+const movieNameInput = document.getElementById('movie-name');
+const hallInput = document.getElementById('hall-select');
+const dateInput = document.getElementById('show-date');
+const timeInput = document.getElementById('show-time');
+const tableBodyFilm = document.getElementById('tableBodyFilm');
+const movieTemplate = document.getElementById('movieTemplate');
+const moviePageInfo = document.getElementById('infoMovie');
+
+const tableBodyCustomer = document.getElementById('tableBodyCustomer');
+const customerTemplate = document.getElementById('customerMovieTemplate');
+const customerPageInfo = document.getElementById('infoCustomer');
+const seatSelectionTitle = document.getElementById('seat-selection-title');
+const seatSelectionHint = document.getElementById('seat-selection-hint');
+const seatSelectionContent = document.getElementById('seat-selection-content');
+const reserveSeatsButton = document.getElementById('reserve-seats-button');
+const customerNameInput = document.getElementById('customer-name');
+
+function setActiveRole (role) {
   if (role === 'operator') {
     operatorPage.style.display = 'block';
     customerPage.style.display = 'none';
@@ -15,145 +52,129 @@ const setActiveRole = (role) => {
     customerButton.classList.add('is-active');
     operatorButton.classList.remove('is-active');
   }
-};
+}
 
-operatorButton.addEventListener('click', () => {
-  setActiveRole('operator');
-});
+function calculateHallCapacity (hall) {
+  const rows = Number(hall.rows);
+  const seatsPerRow = Number(hall.seatsPerRow);
+  return rows * seatsPerRow;
+}
 
-customerButton.addEventListener('click', () => {
-  setActiveRole('customer');
-});
+function findHallByName (hallName) {
+  for (let i = 0; i < halls.length; i++) {
+    if (halls[i].name === hallName) {
+      return halls[i];
+    }
+  }
+  return null;
+}
 
-setActiveRole('operator');
+function findShowIndexById (showId) {
+  for (let i = 0; i < shows.length; i++) {
+    if (String(shows[i]._id) === String(showId)) {
+      return i;
+    }
+  }
+  return -1;
+}
 
-// functions for operator
+function recomputeReservedSeats () {
+  for (let i = 0; i < shows.length; i++) {
+    shows[i].reservedSeats = 0;
+    const hall = findHallByName(shows[i].hall);
+    if (hall) {
+      shows[i].totalSeats = calculateHallCapacity(hall);
+    } else if (!shows[i].totalSeats) {
+      shows[i].totalSeats = 0;
+    }
+  }
 
-// restrict the items in the movie table per page to 3
-const shows = [];
-let currentMoviePage = 1;
-const itemsPerMoviePage = 3;
+  for (let j = 0; j < reservations.length; j++) {
+    const reservation = reservations[j];
+    const showId = reservation.show && reservation.show._id ? reservation.show._id : reservation.showId;
+    const idx = findShowIndexById(showId);
 
-// restrict the items in the hall table per page to 3
+    if (idx !== -1 && Array.isArray(reservation.seats)) {
+      shows[idx].reservedSeats = shows[idx].reservedSeats + reservation.seats.length;
+    }
+  }
+}
 
-const halls = [];
-let currentHallPage = 1;
-const itemsPerHallPage = 3;
+async function loadHalls () {
+  const response = await fetch('/api/halls');
+  const data = await response.json();
 
-// restrict the items in the customer table per page to 3
+  halls.length = 0;
+  for (let i = 0; i < data.length; i++) {
+    const hall = data[i];
+    hall.all = calculateHallCapacity(hall);
+    halls.push(hall);
+  }
+}
 
-let currentCustomerPage = 1;
-const itemsPerCustomerPage = 3;
+async function loadShows () {
+  const response = await fetch('/api/shows');
+  const data = await response.json();
 
-// variable for selected movies
+  shows.length = 0;
+  for (let i = 0; i < data.length; i++) {
+    const show = data[i];
+    const hall = findHallByName(show.hall);
 
-let currentSelectedShowIndex = null;
+    if (hall) {
+      show.totalSeats = calculateHallCapacity(hall);
+    } else if (!show.totalSeats) {
+      show.totalSeats = 0;
+    }
 
-// creating the hall
+    show.reservedSeats = 0;
+    shows.push(show);
+  }
+}
 
-const nameInput = document.getElementById('hall-name');
-const rowInput = document.getElementById('rows-count');
-const seatsPerRowInput = document.getElementById('seats-per-row');
-const tableBodyHall = document.getElementById('tableBodyHall');
-const template = document.getElementById('row-template');
+async function loadReservations () {
+  const response = await fetch('/api/reservations');
+  const data = await response.json();
 
-document.getElementById('create-hall-button').addEventListener('click', () => {
-  const name = nameInput.value;
-  const rows = rowInput.value;
-  const seatsPerRow = seatsPerRowInput.value;
-
-  const clone = template.content.cloneNode(true);
-
-  clone.querySelector('.name').textContent = name;
-  clone.querySelector('.reihen').textContent = rows;
-  clone.querySelector('.sitze').textContent = seatsPerRow;
-  clone.querySelector('.gesamtkapazität').textContent = rows * seatsPerRow;
-
-  const all = rows * seatsPerRow;
-  halls.push({
-    name,
-    rows,
-    seatsPerRow,
-    all
-  });
-  renderHallTable();
-});
-
-const hallPageInfo = document.getElementById('infoHall');
+  reservations.length = 0;
+  for (let i = 0; i < data.length; i++) {
+    reservations.push(data[i]);
+  }
+}
 
 function renderHallTable () {
   tableBodyHall.innerHTML = '';
 
   const start = (currentHallPage - 1) * itemsPerHallPage;
   const end = start + itemsPerHallPage;
-
   const totalPages = Math.max(1, Math.ceil(halls.length / itemsPerHallPage));
-
   const pageItems = halls.slice(start, end);
 
-  pageItems.forEach(hall => {
+  for (let i = 0; i < pageItems.length; i++) {
+    const hall = pageItems[i];
     const clone = template.content.cloneNode(true);
 
     clone.querySelector('.name').textContent = hall.name;
     clone.querySelector('.reihen').textContent = hall.rows;
     clone.querySelector('.sitze').textContent = hall.seatsPerRow;
-    clone.querySelector('.gesamtkapazität').textContent = hall.all;
+    clone.querySelector('.gesamtkapazität').textContent = calculateHallCapacity(hall);
 
     tableBodyHall.appendChild(clone);
-  });
-  hallPageInfo.textContent = `Seite ${currentHallPage} von ${totalPages}`;
-}
-
-// create movie
-const movieNameInput = document.getElementById('movie-name');
-const hallInput = document.getElementById('hall-select');
-const dateInput = document.getElementById('show-date');
-const timeInput = document.getElementById('show-time');
-const tableBodyFilm = document.getElementById('tableBodyFilm');
-const movieTemplate = document.getElementById('movieTemplate');
-
-document.getElementById('create-show-button').addEventListener('click', () => {
-  const movie = movieNameInput.value;
-  const hallName = hallInput.value;
-  const date = dateInput.value;
-  const time = timeInput.value;
-
-  // find hall by name
-  const hallObj = halls.find(h => h.name === hallName);
-
-  if (!hallObj) {
-    window.alert('Saal existiert nicht!');
-    return;
   }
 
-  const totalSeats = hallObj.all;
-
-  shows.push({
-    movie,
-    hall: hallName,
-    date,
-    time,
-    totalSeats,
-    reservedSeats: 0
-  });
-
-  renderMovieTable();
-  renderCustomerTable();
-});
-
-const moviePageInfo = document.getElementById('infoMovie');
+  hallPageInfo.textContent = `Seite ${currentHallPage} von ${totalPages}`;
+}
 
 function renderMovieTable () {
   tableBodyFilm.innerHTML = '';
 
   const start = (currentMoviePage - 1) * itemsPerMoviePage;
   const end = start + itemsPerMoviePage;
-
   const totalPages = Math.max(1, Math.ceil(shows.length / itemsPerMoviePage));
-
   const pageItems = shows.slice(start, end);
 
-  pageItems.forEach(show => {
+  for (let i = 0; i < pageItems.length; i++) {
+    const show = pageItems[i];
     const clone = movieTemplate.content.cloneNode(true);
 
     clone.querySelector('.movieName').textContent = show.movie;
@@ -164,47 +185,10 @@ function renderMovieTable () {
       `${show.totalSeats - show.reservedSeats}/${show.totalSeats}`;
 
     tableBodyFilm.appendChild(clone);
-  });
+  }
 
   moviePageInfo.textContent = `Seite ${currentMoviePage} von ${totalPages}`;
 }
-
-// toggle halls and movies
-// halls
-document.getElementById('prevButtonHall').addEventListener('click', () => {
-  if (currentHallPage > 1) {
-    currentHallPage--;
-    renderHallTable();
-  }
-});
-
-document.getElementById('nextButtonHall').addEventListener('click', () => {
-  if (currentHallPage * itemsPerHallPage < halls.length) {
-    currentHallPage++;
-    renderHallTable();
-  }
-});
-// shows
-document.getElementById('prevButtonMovie').addEventListener('click', () => {
-  if (currentMoviePage > 1) {
-    currentMoviePage--;
-    renderMovieTable();
-  }
-});
-
-document.getElementById('nextButtonMovie').addEventListener('click', () => {
-  if (currentMoviePage * itemsPerMoviePage < shows.length) {
-    currentMoviePage++;
-    renderMovieTable();
-  }
-});
-
-// Customer page
-
-// make customer table
-const tableBodyCustomer = document.getElementById('tableBodyCustomer');
-const customerTemplate = document.getElementById('customerMovieTemplate');
-const customerPageInfo = document.getElementById('infoCustomer');
 
 function renderCustomerTable () {
   if (!tableBodyCustomer) return;
@@ -213,105 +197,279 @@ function renderCustomerTable () {
 
   const start = (currentCustomerPage - 1) * itemsPerCustomerPage;
   const end = start + itemsPerCustomerPage;
-
   const totalPages = Math.max(1, Math.ceil(shows.length / itemsPerCustomerPage));
-
   const pageItems = shows.slice(start, end);
 
-  pageItems.forEach((show, index) => {
+  for (let i = 0; i < pageItems.length; i++) {
+    const show = pageItems[i];
     const clone = customerTemplate.content.cloneNode(true);
-
     const available = show.totalSeats - show.reservedSeats;
+    const button = clone.querySelector('.js-select-seats');
+    const globalIndex = start + i;
 
     clone.querySelector('.c-movie').textContent = show.movie;
     clone.querySelector('.c-date').textContent = show.date;
     clone.querySelector('.c-time').textContent = show.time;
     clone.querySelector('.c-hall').textContent = show.hall;
-    clone.querySelector('.c-available').textContent =
-      `${available}/${show.totalSeats}`;
-
-    const button = clone.querySelector('.js-select-seats');
-
-    // WICHTIG: richtiger globaler Index wegen Pagination
-    const globalIndex = start + index;
+    clone.querySelector('.c-available').textContent = `${available}/${show.totalSeats}`;
 
     button.dataset.index = globalIndex;
     button.dataset.movie = show.movie;
     button.dataset.date = show.date;
     button.dataset.time = show.time;
 
-    button.addEventListener('click', () => {
+    button.addEventListener('click', function () {
       currentSelectedShowIndex = globalIndex;
       updateSeatSelectionTitle(button);
     });
 
     tableBodyCustomer.appendChild(clone);
-  });
+  }
 
   customerPageInfo.textContent = `Seite ${currentCustomerPage} von ${totalPages}`;
 }
-const seatSelectionTitle = document.getElementById('seat-selection-title');
-const seatSelectionHint = document.getElementById('seat-selection-hint');
-const seatSelectionContent = document.getElementById('seat-selection-content');
-const reserveSeatsButton = document.getElementById('reserve-seats-button');
 
-const updateSeatSelectionTitle = (button) => {
+function updateSeatSelectionTitle (button) {
   if (!seatSelectionTitle || !seatSelectionHint) {
     return;
   }
 
-  const { movie, date, time } = button.dataset;
+  const movie = button.dataset.movie;
+  const date = button.dataset.date;
+  const time = button.dataset.time;
+
   seatSelectionTitle.textContent = `Sitzplatzauswahl - ${movie} (${date}, ${time})`;
   seatSelectionHint.style.display = 'none';
   seatSelectionContent.style.display = 'block';
-};
-
-if (seatSelectionTitle) {
-  seatSelectionTitle.textContent = '';
-}
-if (seatSelectionContent) {
-  seatSelectionContent.style.display = 'none';
 }
 
-const markSelectedSeatsAsTaken = () => {
-  if (currentSelectedShowIndex === null) return;
+function getSelectedSeatNumbers () {
+  const selectedSeatToggles = seatSelectionContent.querySelectorAll('.seat-toggle:checked');
+  const seatNumbers = [];
 
-  const show = shows[currentSelectedShowIndex];
+  for (let i = 0; i < selectedSeatToggles.length; i++) {
+    const id = selectedSeatToggles[i].id;
+    const number = Number(id.replace('seat-', ''));
+    seatNumbers.push(number);
+  }
 
-  if (!show) {
+  return seatNumbers;
+}
+
+async function createHall () {
+  const name = nameInput.value;
+  const rows = Number(rowInput.value);
+  const seatsPerRow = Number(seatsPerRowInput.value);
+
+  if (!name || !rows || !seatsPerRow) {
+    window.alert('Bitte alle Felder ausfüllen');
     return;
   }
 
-  const selectedSeats = seatSelectionContent.querySelectorAll('.seat-toggle:checked');
-  const newlyReserved = selectedSeats.length;
-
-  show.reservedSeats += newlyReserved;
-
-  selectedSeats.forEach((seatToggle) => {
-    seatToggle.checked = false;
-    seatToggle.disabled = true;
+  const response = await fetch('/api/halls', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      name: name,
+      rows: rows,
+      seatsPerRow: seatsPerRow
+    })
   });
+
+  if (!response.ok) {
+    window.alert('Saal konnte nicht erstellt werden');
+    return;
+  }
+
+  const hall = await response.json();
+  hall.all = calculateHallCapacity(hall);
+  halls.push(hall);
+
+  renderHallTable();
+}
+
+async function createShow () {
+  const movie = movieNameInput.value;
+  const hallName = hallInput.value;
+  const date = dateInput.value;
+  const time = timeInput.value;
+  const hallObj = findHallByName(hallName);
+
+  if (!hallObj) {
+    window.alert('Saal existiert nicht!');
+    return;
+  }
+
+  if (!movie || !date || !time) {
+    window.alert('Bitte alle Felder ausfüllen');
+    return;
+  }
+
+  const response = await fetch('/api/shows', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      movie: movie,
+      hall: hallName,
+      date: date,
+      time: time
+    })
+  });
+
+  if (!response.ok) {
+    window.alert('Vorstellung konnte nicht erstellt werden');
+    return;
+  }
+
+  const show = await response.json();
+  show.totalSeats = calculateHallCapacity(hallObj);
+  show.reservedSeats = 0;
+  shows.push(show);
+
+  renderMovieTable();
+  renderCustomerTable();
+}
+
+async function reserveSeats () {
+  if (currentSelectedShowIndex === null) return;
+
+  const show = shows[currentSelectedShowIndex];
+  if (!show) return;
+
+  const customerName = customerNameInput.value;
+  const seatNumbers = getSelectedSeatNumbers();
+
+  if (!customerName) {
+    window.alert('Bitte Namen eingeben');
+    return;
+  }
+
+  if (seatNumbers.length < 1) {
+    window.alert('Bitte mindestens einen Sitz auswählen');
+    return;
+  }
+
+  const response = await fetch('/api/reservations', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      show: {
+        _id: show._id,
+        movie: show.movie,
+        hall: show.hall,
+        date: show.date,
+        time: show.time
+      },
+      showId: show._id,
+      seats: seatNumbers,
+      customerName: customerName
+    })
+  });
+
+  if (!response.ok) {
+    window.alert('Reservierung fehlgeschlagen');
+    return;
+  }
+
+  const reservation = await response.json();
+  reservations.push(reservation);
+  show.reservedSeats = show.reservedSeats + seatNumbers.length;
+
+  const selectedSeatToggles = seatSelectionContent.querySelectorAll('.seat-toggle:checked');
+  for (let i = 0; i < selectedSeatToggles.length; i++) {
+    selectedSeatToggles[i].checked = false;
+    selectedSeatToggles[i].disabled = true;
+  }
 
   renderCustomerTable();
   renderMovieTable();
-};
-
-if (reserveSeatsButton) {
-  reserveSeatsButton.addEventListener('click', markSelectedSeatsAsTaken);
 }
 
-// toggle on customer page
+async function initData () {
+  try {
+    await loadHalls();
+    await loadShows();
+    await loadReservations();
+    recomputeReservedSeats();
+    renderHallTable();
+    renderMovieTable();
+    renderCustomerTable();
+  } catch (error) {
+    console.error(error);
+    window.alert('Fehler beim Laden der Daten');
+  }
+}
 
-document.getElementById('prevCustomerButton')?.addEventListener('click', () => {
+operatorButton.addEventListener('click', function () {
+  setActiveRole('operator');
+});
+
+customerButton.addEventListener('click', function () {
+  setActiveRole('customer');
+});
+
+document.getElementById('create-hall-button').addEventListener('click', createHall);
+document.getElementById('create-show-button').addEventListener('click', createShow);
+
+document.getElementById('prevButtonHall').addEventListener('click', function () {
+  if (currentHallPage > 1) {
+    currentHallPage--;
+    renderHallTable();
+  }
+});
+
+document.getElementById('nextButtonHall').addEventListener('click', function () {
+  if (currentHallPage * itemsPerHallPage < halls.length) {
+    currentHallPage++;
+    renderHallTable();
+  }
+});
+
+document.getElementById('prevButtonMovie').addEventListener('click', function () {
+  if (currentMoviePage > 1) {
+    currentMoviePage--;
+    renderMovieTable();
+  }
+});
+
+document.getElementById('nextButtonMovie').addEventListener('click', function () {
+  if (currentMoviePage * itemsPerMoviePage < shows.length) {
+    currentMoviePage++;
+    renderMovieTable();
+  }
+});
+
+document.getElementById('prevCustomerButton')?.addEventListener('click', function () {
   if (currentCustomerPage > 1) {
     currentCustomerPage--;
     renderCustomerTable();
   }
 });
 
-document.getElementById('nextCustomerButton')?.addEventListener('click', () => {
+document.getElementById('nextCustomerButton')?.addEventListener('click', function () {
   if (currentCustomerPage * itemsPerCustomerPage < shows.length) {
     currentCustomerPage++;
     renderCustomerTable();
   }
 });
+
+if (seatSelectionTitle) {
+  seatSelectionTitle.textContent = '';
+}
+
+if (seatSelectionContent) {
+  seatSelectionContent.style.display = 'none';
+}
+
+if (reserveSeatsButton) {
+  reserveSeatsButton.addEventListener('click', reserveSeats);
+}
+
+setActiveRole('operator');
+initData();

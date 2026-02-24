@@ -103,15 +103,17 @@ app.get('/api/reservations', async function (req, res) {
 
 app.post('/api/reservations', async function (req, res) {
   try {
+    const show = req.body.show;
     const showId = req.body.showId;
     const seats = req.body.seats;
     const customerName = req.body.customerName;
 
-    if (!showId || !seats || !customerName) {
-      return res.status(400).json({ error: 'showId, seats, customerName are required' });
+    if ((!show && !showId) || !seats || !customerName) {
+      return res.status(400).json({ error: 'show/showId, seats, customerName are required' });
     }
 
     const reservation = {
+      show: show,
       showId: showId,
       seats: seats,
       customerName: customerName
