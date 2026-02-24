@@ -27,65 +27,62 @@ customerButton.addEventListener('click', () => {
 
 setActiveRole('operator');
 
-//functions for operator
+// functions for operator
 
-//restrict the items in the movie table per page to 3
-let shows = [];
+// restrict the items in the movie table per page to 3
+const shows = [];
 let currentMoviePage = 1;
 const itemsPerMoviePage = 3;
 
-//restrict the items in the hall table per page to 3
+// restrict the items in the hall table per page to 3
 
-let halls = [];
+const halls = [];
 let currentHallPage = 1;
 const itemsPerHallPage = 3;
 
-//restrict the items in the customer table per page to 3
+// restrict the items in the customer table per page to 3
 
 let currentCustomerPage = 1;
 const itemsPerCustomerPage = 3;
 
-//variable for selected movies
+// variable for selected movies
 
 let currentSelectedShowIndex = null;
 
 // creating the hall
 
-const nameInput = document.getElementById("hall-name");
-const rowInput = document.getElementById("rows-count");
-const seatsPerRowInput = document.getElementById("seats-per-row");
-const tableBodyHall = document.getElementById("tableBodyHall");
-const template = document.getElementById("row-template");
-
+const nameInput = document.getElementById('hall-name');
+const rowInput = document.getElementById('rows-count');
+const seatsPerRowInput = document.getElementById('seats-per-row');
+const tableBodyHall = document.getElementById('tableBodyHall');
+const template = document.getElementById('row-template');
 
 document.getElementById('create-hall-button').addEventListener('click', () => {
   const name = nameInput.value;
   const rows = rowInput.value;
   const seatsPerRow = seatsPerRowInput.value;
 
-
   const clone = template.content.cloneNode(true);
 
+  clone.querySelector('.name').textContent = name;
+  clone.querySelector('.reihen').textContent = rows;
+  clone.querySelector('.sitze').textContent = seatsPerRow;
+  clone.querySelector('.gesamtkapazität').textContent = rows * seatsPerRow;
 
-  clone.querySelector(".name").textContent = name;
-  clone.querySelector(".reihen").textContent = rows;
-  clone.querySelector(".sitze").textContent = seatsPerRow;
-  clone.querySelector(".gesamtkapazität").textContent = rows * seatsPerRow;
-
-  let all = rows * seatsPerRow;
+  const all = rows * seatsPerRow;
   halls.push({
     name,
     rows,
     seatsPerRow,
-    all,
+    all
   });
   renderHallTable();
 });
 
-const hallPageInfo = document.getElementById("infoHall");
+const hallPageInfo = document.getElementById('infoHall');
 
-function renderHallTable() {
-  tableBodyHall.innerHTML = "";
+function renderHallTable () {
+  tableBodyHall.innerHTML = '';
 
   const start = (currentHallPage - 1) * itemsPerHallPage;
   const end = start + itemsPerHallPage;
@@ -97,24 +94,23 @@ function renderHallTable() {
   pageItems.forEach(hall => {
     const clone = template.content.cloneNode(true);
 
-    clone.querySelector(".name").textContent = hall.name;
-    clone.querySelector(".reihen").textContent = hall.rows;
-    clone.querySelector(".sitze").textContent = hall.seatsPerRow;
-    clone.querySelector(".gesamtkapazität").textContent = hall.all;
+    clone.querySelector('.name').textContent = hall.name;
+    clone.querySelector('.reihen').textContent = hall.rows;
+    clone.querySelector('.sitze').textContent = hall.seatsPerRow;
+    clone.querySelector('.gesamtkapazität').textContent = hall.all;
 
     tableBodyHall.appendChild(clone);
   });
   hallPageInfo.textContent = `Seite ${currentHallPage} von ${totalPages}`;
-
 }
-//create movie
 
-const movieNameInput = document.getElementById("movie-name");
-const hallInput = document.getElementById("hall-select");
-const dateInput = document.getElementById("show-date");
-const timeInput = document.getElementById("show-time");
-const tableBodyFilm = document.getElementById("tableBodyFilm");
-const movieTemplate = document.getElementById("movieTemplate");
+// create movie
+const movieNameInput = document.getElementById('movie-name');
+const hallInput = document.getElementById('hall-select');
+const dateInput = document.getElementById('show-date');
+const timeInput = document.getElementById('show-time');
+const tableBodyFilm = document.getElementById('tableBodyFilm');
+const movieTemplate = document.getElementById('movieTemplate');
 
 document.getElementById('create-show-button').addEventListener('click', () => {
   const movie = movieNameInput.value;
@@ -122,11 +118,11 @@ document.getElementById('create-show-button').addEventListener('click', () => {
   const date = dateInput.value;
   const time = timeInput.value;
 
-  //find hall
+  // find hall by name
   const hallObj = halls.find(h => h.name === hallName);
 
   if (!hallObj) {
-    alert("Saal existiert nicht!");
+    window.alert('Saal existiert nicht!');
     return;
   }
 
@@ -138,17 +134,17 @@ document.getElementById('create-show-button').addEventListener('click', () => {
     date,
     time,
     totalSeats,
-    reservedSeats: 0,
+    reservedSeats: 0
   });
 
   renderMovieTable();
   renderCustomerTable();
 });
 
-const moviePageInfo = document.getElementById("infoMovie");
+const moviePageInfo = document.getElementById('infoMovie');
 
-function renderMovieTable() {
-  tableBodyFilm.innerHTML = "";
+function renderMovieTable () {
+  tableBodyFilm.innerHTML = '';
 
   const start = (currentMoviePage - 1) * itemsPerMoviePage;
   const end = start + itemsPerMoviePage;
@@ -160,11 +156,11 @@ function renderMovieTable() {
   pageItems.forEach(show => {
     const clone = movieTemplate.content.cloneNode(true);
 
-    clone.querySelector(".movieName").textContent = show.movie;
-    clone.querySelector(".hall").textContent = show.hall;
-    clone.querySelector(".date").textContent = show.date;
-    clone.querySelector(".time").textContent = show.time;
-    clone.querySelector(".availableSeats").textContent =
+    clone.querySelector('.movieName').textContent = show.movie;
+    clone.querySelector('.hall').textContent = show.hall;
+    clone.querySelector('.date').textContent = show.date;
+    clone.querySelector('.time').textContent = show.time;
+    clone.querySelector('.availableSeats').textContent =
       `${show.totalSeats - show.reservedSeats}/${show.totalSeats}`;
 
     tableBodyFilm.appendChild(clone);
@@ -173,48 +169,47 @@ function renderMovieTable() {
   moviePageInfo.textContent = `Seite ${currentMoviePage} von ${totalPages}`;
 }
 
-//toggle halls and movies
-//halls
-document.getElementById("prevButtonHall").addEventListener("click", () => {
+// toggle halls and movies
+// halls
+document.getElementById('prevButtonHall').addEventListener('click', () => {
   if (currentHallPage > 1) {
     currentHallPage--;
     renderHallTable();
   }
 });
 
-document.getElementById("nextButtonHall").addEventListener("click", () => {
+document.getElementById('nextButtonHall').addEventListener('click', () => {
   if (currentHallPage * itemsPerHallPage < halls.length) {
     currentHallPage++;
     renderHallTable();
   }
 });
-//shows
-document.getElementById("prevButtonMovie").addEventListener("click", () => {
+// shows
+document.getElementById('prevButtonMovie').addEventListener('click', () => {
   if (currentMoviePage > 1) {
     currentMoviePage--;
     renderMovieTable();
   }
 });
 
-document.getElementById("nextButtonMovie").addEventListener("click", () => {
+document.getElementById('nextButtonMovie').addEventListener('click', () => {
   if (currentMoviePage * itemsPerMoviePage < shows.length) {
     currentMoviePage++;
     renderMovieTable();
   }
 });
 
-
 // Customer page
 
-//make customer table
-const tableBodyCustomer = document.getElementById("tableBodyCustomer");
-const customerTemplate = document.getElementById("customerMovieTemplate");
-const customerPageInfo = document.getElementById("infoCustomer");
+// make customer table
+const tableBodyCustomer = document.getElementById('tableBodyCustomer');
+const customerTemplate = document.getElementById('customerMovieTemplate');
+const customerPageInfo = document.getElementById('infoCustomer');
 
-function renderCustomerTable() {
+function renderCustomerTable () {
   if (!tableBodyCustomer) return;
 
-  tableBodyCustomer.innerHTML = "";
+  tableBodyCustomer.innerHTML = '';
 
   const start = (currentCustomerPage - 1) * itemsPerCustomerPage;
   const end = start + itemsPerCustomerPage;
@@ -228,14 +223,14 @@ function renderCustomerTable() {
 
     const available = show.totalSeats - show.reservedSeats;
 
-    clone.querySelector(".c-movie").textContent = show.movie;
-    clone.querySelector(".c-date").textContent = show.date;
-    clone.querySelector(".c-time").textContent = show.time;
-    clone.querySelector(".c-hall").textContent = show.hall;
-    clone.querySelector(".c-available").textContent =
+    clone.querySelector('.c-movie').textContent = show.movie;
+    clone.querySelector('.c-date').textContent = show.date;
+    clone.querySelector('.c-time').textContent = show.time;
+    clone.querySelector('.c-hall').textContent = show.hall;
+    clone.querySelector('.c-available').textContent =
       `${available}/${show.totalSeats}`;
 
-    const button = clone.querySelector(".js-select-seats");
+    const button = clone.querySelector('.js-select-seats');
 
     // WICHTIG: richtiger globaler Index wegen Pagination
     const globalIndex = start + index;
@@ -245,7 +240,7 @@ function renderCustomerTable() {
     button.dataset.date = show.date;
     button.dataset.time = show.time;
 
-    button.addEventListener("click", () => {
+    button.addEventListener('click', () => {
       currentSelectedShowIndex = globalIndex;
       updateSeatSelectionTitle(button);
     });
@@ -278,7 +273,6 @@ if (seatSelectionContent) {
   seatSelectionContent.style.display = 'none';
 }
 
-
 const markSelectedSeatsAsTaken = () => {
   if (currentSelectedShowIndex === null) return;
 
@@ -300,7 +294,6 @@ const markSelectedSeatsAsTaken = () => {
 
   renderCustomerTable();
   renderMovieTable();
-
 };
 
 if (reserveSeatsButton) {
@@ -309,14 +302,14 @@ if (reserveSeatsButton) {
 
 // toggle on customer page
 
-document.getElementById("prevCustomerButton")?.addEventListener("click", () => {
+document.getElementById('prevCustomerButton')?.addEventListener('click', () => {
   if (currentCustomerPage > 1) {
     currentCustomerPage--;
     renderCustomerTable();
   }
 });
 
-document.getElementById("nextCustomerButton")?.addEventListener("click", () => {
+document.getElementById('nextCustomerButton')?.addEventListener('click', () => {
   if (currentCustomerPage * itemsPerCustomerPage < shows.length) {
     currentCustomerPage++;
     renderCustomerTable();

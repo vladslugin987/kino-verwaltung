@@ -8,16 +8,18 @@
   },
   "scripts": {
     "clean": "shx rm -rf webapp/dist node_modules",
-    "lint": "npx semistandard --verbose | snazzy",
+    "lint": "npx semistandard --verbose",
     "debug": "npm run html && npm run css && npm run js",
     "build": "npm run lint && npm run debug && npm run minify",
     "html": "shx mkdir -p webapp/dist && shx cp webapp/src/index.html webapp/dist/",
     "css": "shx mkdir -p webapp/dist && lessc webapp/src/styles/style.less webapp/dist/style.css",
     "js": "shx mkdir -p webapp/dist && esbuild webapp/src/js/Main.mjs --log-level=warning --bundle --outfile=webapp/dist/bundle.js",
+    "minify": "lessc --clean-css webapp/src/styles/style.less webapp/dist/style.css && terser webapp/dist/bundle.js --compress --mangle --output webapp/dist/bundle.js",
     "watch:css": "nodemon --watch webapp/src/styles -e less --exec \"npm run css\"",
     "watch:js": "esbuild webapp/src/js/Main.mjs --bundle --outfile=webapp/dist/bundle.js --watch",
     "watch:html": "nodemon --watch webapp/src/index.html --exec \"npm run html\"",
-    "dev": "concurrently \"npm run watch:css\" \"npm run watch:js\" \"npm run watch:html\" \"nodemon server/src/Server.mjs\" \"browser-sync start --proxy localhost:8080 --files webapp/dist\""
+    "dev": "concurrently \"npm run watch:css\" \"npm run watch:js\" \"npm run watch:html\" \"nodemon server/src/Server.mjs\" \"browser-sync start --proxy localhost:8080 --files webapp/dist\"",
+    "start": "node server/src/Server.mjs 8080"
   },
   "keywords": [],
   "author": "",
@@ -31,6 +33,7 @@
     "nodemon": "^3.1.11",
     "semistandard": "^17.0.0",
     "shx": "^0.4.0",
+    "standard-engine": "^15.1.0",
     "terser": "^5.44.1"
   },
   "dependencies": {
