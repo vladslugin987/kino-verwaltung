@@ -1,3 +1,5 @@
+import QRCode from 'qrcode';
+
 const operatorPage = document.getElementById('operator-page');
 const customerPage = document.getElementById('customer-page');
 const operatorButton = document.getElementById('operator-button');
@@ -40,6 +42,12 @@ const seatSelectionContent = document.getElementById('seat-selection-content');
 const seatGrid = document.getElementById('seat-grid');
 const reserveSeatsButton = document.getElementById('reserve-seats-button');
 const customerNameInput = document.getElementById('customer-name');
+const reservationTicket = document.getElementById('reservation-ticket');
+const reservationQr = document.getElementById('reservation-qr');
+const reservationTicketText = document.getElementById('reservation-ticket-text');
+const printReservationButton = document.getElementById('print-reservation-button');
+const tableBodyReservations = document.getElementById('tableBodyReservations');
+const reservationTemplate = document.getElementById('reservationTemplate');
 
 // role switch (operator / customer)
 function setActiveRole (role) {
@@ -290,6 +298,27 @@ function renderMovieTable () {
   moviePageInfo.textContent = `Seite ${currentMoviePage} von ${totalPages}`;
 }
 
+function renderReservationsTable () {
+  if (!tableBodyReservations || !reservationTemplate) return;
+
+  tableBodyReservations.innerHTML = '';
+
+  for (let i = 0; i < reservations.length; i++) {
+    const reservation = reservations[i];
+    const show = reservation.show || {};
+    const clone = reservationTemplate.content.cloneNode(true);
+
+    clone.querySelector('.r-movie').textContent = show.movie || '-';
+    clone.querySelector('.r-hall').textContent = show.hall || '-';
+    clone.querySelector('.r-date').textContent = show.date || '-';
+    clone.querySelector('.r-time').textContent = show.time || '-';
+    clone.querySelector('.r-customer').textContent = reservation.customerName || '-';
+    clone.querySelector('.r-seats').textContent = Array.isArray(reservation.seats) ? reservation.seats.join(', ') : '-';
+
+    tableBodyReservations.appendChild(clone);
+  }
+}
+
 // table: shows (customer)
 function renderCustomerTable () {
   if (!tableBodyCustomer) return;
@@ -357,6 +386,26 @@ function getSelectedSeatNumbers () {
   }
 
   return seatNumbers;
+}
+
+async function generateQrImageDataUrl (text) {
+  const dataUrl = await QRCode.toDataURL(text, {
+    width: 220,
+    margin: 1
+  });
+  return dataUrl;
+}
+
+async function showReservationTicket (reservation, show, seatNumbers, customerName) {
+  if (!reservationTicket || !reservationQr || !reservationTicketText) return;
+
+  const reservationId = reservation._id ? String(reservation._id) : 'n/a';
+  const qrPayload = `reservationId:${reservationId};movie:${show.movie};hall:${show.hall};date:${show.date};time:${show.time};customer:${customerName};seats:${seatNumbers.join(',')}`;
+
+  reservationQr.src = await generateQrImageDataUrl(qrPayload);
+  reservationTicketText.textContent =
+    `Film: ${show.movie} | Saal: ${show.hall} | Datum: ${show.date} ${show.time} | Name: ${customerName} | Sitze: ${seatNumbers.join(', ')} | ID: ${reservationId}`;
+  reservationTicket.style.display = 'block';
 }
 
 // create new hall
@@ -487,9 +536,11 @@ async function reserveSeats () {
   reservations.push(reservation);
   recomputeReservedSeats();
   applySeatGridForShow(show);
+  await showReservationTicket(reservation, show, seatNumbers, customerName);
 
   renderCustomerTable();
   renderMovieTable();
+  renderReservationsTable();
 }
 
 // first load from backend
@@ -502,6 +553,7 @@ async function initData () {
     renderHallTable();
     renderMovieTable();
     renderCustomerTable();
+    renderReservationsTable();
   } catch (error) {
     console.error(error);
     window.alert('Fehler beim Laden der Daten');
@@ -571,6 +623,13 @@ if (seatSelectionContent) {
 
 if (reserveSeatsButton) {
   reserveSeatsButton.addEventListener('click', reserveSeats);
+}
+
+if (printReservationButton) {
+  printReservationButton.addEventListener('click', function () {
+    if (!reservationTicket || reservationTicket.style.display === 'none') return;
+    window.print();
+  });
 }
 
 setActiveRole('operator');

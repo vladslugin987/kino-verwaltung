@@ -11,6 +11,7 @@
 @text-default: #000;
 @shadow-sm: 2px 2px 2px lightgray;
 @radius-sm: 3px;
+@accent-soft: #f4ecff;
 
 *,
 *::before,
@@ -26,7 +27,7 @@ body {
 }
 
 .header {
-    background-color: @primary;
+    background: linear-gradient(135deg, @primary 0%, #8d57d9 100%);
     color: @text-on-primary;
     margin: 0;
     padding: 20px;
@@ -46,6 +47,15 @@ body {
     height: 1.5rem;
     padding: 0 0.5rem;
     cursor: pointer;
+    transition: transform 0.1s ease, opacity 0.15s ease;
+
+    &:hover {
+        opacity: 0.9;
+    }
+
+    &:active {
+        transform: translateY(1px);
+    }
 }
 
 .button.is-active {
@@ -89,8 +99,8 @@ body {
     width: 100%;
     height: 25rem;
     border-radius: @radius-sm;
-    border: 1px solid @text-default;
-    box-shadow: @shadow-sm;
+    border: 1px solid #d9d9d9;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
     background-color: @bg-surface;
 }
 
@@ -134,6 +144,10 @@ label {
     border: 1px solid @text-default;
     padding: 0.4rem 0.5rem;
     text-align: left;
+}
+
+.hall-table thead {
+    background-color: @accent-soft;
 }
 
 .table-pagination {
@@ -290,4 +304,62 @@ label {
     display: flex;
     justify-content: flex-start;
     margin-top: 0.5rem;
+}
+
+.reservation-ticket {
+    display: none;
+    margin: 1rem auto 0;
+    border: 1px solid #d6c7f5;
+    border-radius: 10px;
+    padding: 0.9rem;
+    max-width: 340px;
+    background: #faf7ff;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.reservation-ticket-title {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #51288a;
+}
+
+#reservation-qr {
+    width: 200px;
+    height: 200px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    margin-bottom: 0.5rem;
+}
+
+#reservation-ticket-text {
+    margin: 0 0 0.75rem 0;
+    font-size: 0.9rem;
+    line-height: 1.3;
+}
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    #reservation-ticket,
+    #reservation-ticket * {
+        visibility: visible;
+    }
+
+    #reservation-ticket {
+        position: absolute;
+        left: 50%;
+        top: 20px;
+        transform: translateX(-50%);
+        width: 380px;
+        margin: 0;
+        box-shadow: none;
+        border: 1px solid #222;
+        background: #fff;
+    }
+
+    #print-reservation-button {
+        display: none;
+    }
 }

@@ -122,6 +122,35 @@
         <button class="button" id="nextButtonMovie" type="button">Weiter -&gt;</button>
       </div>
     </div>
+
+    <div class="container full-width">
+      <div class="section-title">Reservierungen</div>
+
+      <table class="hall-table">
+        <thead>
+          <tr>
+            <th>Film</th>
+            <th>Saal</th>
+            <th>Datum</th>
+            <th>Uhrzeit</th>
+            <th>Kunde</th>
+            <th>Sitze</th>
+          </tr>
+        </thead>
+        <tbody id="tableBodyReservations"></tbody>
+      </table>
+
+      <template id="reservationTemplate">
+        <tr>
+          <td class="r-movie"></td>
+          <td class="r-hall"></td>
+          <td class="r-date"></td>
+          <td class="r-time"></td>
+          <td class="r-customer"></td>
+          <td class="r-seats"></td>
+        </tr>
+      </template>
+    </div>
   </div>
 
   <!-- Kunde Seite -->
@@ -193,6 +222,13 @@
 
         <div class="seat-actions">
           <button id="reserve-seats-button" class="button" type="button">Reservieren</button>
+        </div>
+
+        <div id="reservation-ticket" class="reservation-ticket">
+          <div class="reservation-ticket-title">Reservierungsbestätigung</div>
+          <img id="reservation-qr" alt="QR Code für Reservierung">
+          <p id="reservation-ticket-text"></p>
+          <button id="print-reservation-button" class="button" type="button">Drucken</button>
         </div>
       </div>
     </div>
