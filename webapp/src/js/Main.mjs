@@ -37,9 +37,11 @@ const customerPageInfo = document.getElementById('infoCustomer');
 const seatSelectionTitle = document.getElementById('seat-selection-title');
 const seatSelectionHint = document.getElementById('seat-selection-hint');
 const seatSelectionContent = document.getElementById('seat-selection-content');
+const seatGrid = document.getElementById('seat-grid');
 const reserveSeatsButton = document.getElementById('reserve-seats-button');
 const customerNameInput = document.getElementById('customer-name');
 
+// role switch (operator / customer)
 function setActiveRole (role) {
   if (role === 'operator') {
     operatorPage.style.display = 'block';
@@ -78,6 +80,7 @@ function findShowIndexById (showId) {
   return -1;
 }
 
+// count reserved seats from saved reservations
 function recomputeReservedSeats () {
   for (let i = 0; i < shows.length; i++) {
     shows[i].reservedSeats = 0;
@@ -100,6 +103,7 @@ function recomputeReservedSeats () {
   }
 }
 
+// load halls from backend
 async function loadHalls () {
   const response = await fetch('/api/halls');
   const data = await response.json();
@@ -112,6 +116,7 @@ async function loadHalls () {
   }
 }
 
+// load shows from backend
 async function loadShows () {
   const response = await fetch('/api/shows');
   const data = await response.json();
@@ -132,6 +137,7 @@ async function loadShows () {
   }
 }
 
+// load reservations from backend
 async function loadReservations () {
   const response = await fetch('/api/reservations');
   const data = await response.json();
@@ -142,6 +148,99 @@ async function loadReservations () {
   }
 }
 
+// return all taken seat numbers for one show
+function getTakenSeatsForShow (show) {
+  const takenSeats = [];
+
+  for (let i = 0; i < reservations.length; i++) {
+    const reservation = reservations[i];
+    const reservationShowId = reservation.show && reservation.show._id ? reservation.show._id : reservation.showId;
+
+    if (String(reservationShowId) === String(show._id) && Array.isArray(reservation.seats)) {
+      for (let j = 0; j < reservation.seats.length; j++) {
+        takenSeats.push(Number(reservation.seats[j]));
+      }
+    }
+  }
+
+  return takenSeats;
+}
+
+// build seat grid dynamically from hall rows/seats
+function renderSeatGridForShow (show) {
+  if (!seatGrid) return;
+
+  const hall = findHallByName(show.hall);
+  if (!hall) {
+    seatGrid.innerHTML = '';
+    return;
+  }
+
+  const rows = Number(hall.rows);
+  const seatsPerRow = Number(hall.seatsPerRow);
+  let seatNumber = 1;
+
+  seatGrid.innerHTML = '';
+
+  for (let row = 0; row < rows; row++) {
+    const rowElement = document.createElement('div');
+    rowElement.className = 'seat-row';
+
+    for (let seat = 0; seat < seatsPerRow; seat++) {
+      const input = document.createElement('input');
+      input.className = 'seat-toggle';
+      input.type = 'checkbox';
+      input.id = `seat-${seatNumber}`;
+
+      const label = document.createElement('label');
+      label.className = 'seat';
+      label.setAttribute('for', input.id);
+      label.textContent = String(seatNumber);
+
+      rowElement.appendChild(input);
+      rowElement.appendChild(label);
+      seatNumber++;
+    }
+
+    seatGrid.appendChild(rowElement);
+  }
+}
+
+// update seat grid for currently selected show
+function applySeatGridForShow (show) {
+  renderSeatGridForShow(show);
+
+  const seatToggles = seatSelectionContent.querySelectorAll('.seat-toggle');
+  const takenSeats = getTakenSeatsForShow(show);
+
+  for (let i = 0; i < seatToggles.length; i++) {
+    const seatToggle = seatToggles[i];
+    const seatId = seatToggle.id;
+    const seatNumber = Number(seatId.replace('seat-', ''));
+    const seatLabel = seatSelectionContent.querySelector(`label[for="${seatId}"]`);
+    let isTaken = false;
+
+    for (let j = 0; j < takenSeats.length; j++) {
+      if (takenSeats[j] === seatNumber) {
+        isTaken = true;
+        break;
+      }
+    }
+
+    seatToggle.checked = false;
+    seatToggle.disabled = isTaken;
+
+    if (seatLabel) {
+      if (isTaken) {
+        seatLabel.classList.add('seat--taken');
+      } else {
+        seatLabel.classList.remove('seat--taken');
+      }
+    }
+  }
+}
+
+// table: halls
 function renderHallTable () {
   tableBodyHall.innerHTML = '';
 
@@ -165,6 +264,7 @@ function renderHallTable () {
   hallPageInfo.textContent = `Seite ${currentHallPage} von ${totalPages}`;
 }
 
+// table: shows (operator)
 function renderMovieTable () {
   tableBodyFilm.innerHTML = '';
 
@@ -190,6 +290,7 @@ function renderMovieTable () {
   moviePageInfo.textContent = `Seite ${currentMoviePage} von ${totalPages}`;
 }
 
+// table: shows (customer)
 function renderCustomerTable () {
   if (!tableBodyCustomer) return;
 
@@ -221,6 +322,7 @@ function renderCustomerTable () {
     button.addEventListener('click', function () {
       currentSelectedShowIndex = globalIndex;
       updateSeatSelectionTitle(button);
+      applySeatGridForShow(show);
     });
 
     tableBodyCustomer.appendChild(clone);
@@ -243,6 +345,7 @@ function updateSeatSelectionTitle (button) {
   seatSelectionContent.style.display = 'block';
 }
 
+// read selected seats from UI
 function getSelectedSeatNumbers () {
   const selectedSeatToggles = seatSelectionContent.querySelectorAll('.seat-toggle:checked');
   const seatNumbers = [];
@@ -256,6 +359,7 @@ function getSelectedSeatNumbers () {
   return seatNumbers;
 }
 
+// create new hall
 async function createHall () {
   const name = nameInput.value;
   const rows = Number(rowInput.value);
@@ -272,9 +376,9 @@ async function createHall () {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      name: name,
-      rows: rows,
-      seatsPerRow: seatsPerRow
+      name,
+      rows,
+      seatsPerRow
     })
   });
 
@@ -290,6 +394,7 @@ async function createHall () {
   renderHallTable();
 }
 
+// create new show
 async function createShow () {
   const movie = movieNameInput.value;
   const hallName = hallInput.value;
@@ -313,10 +418,10 @@ async function createShow () {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      movie: movie,
+      movie,
       hall: hallName,
-      date: date,
-      time: time
+      date,
+      time
     })
   });
 
@@ -334,6 +439,7 @@ async function createShow () {
   renderCustomerTable();
 }
 
+// create reservation with show + seats[] + customerName
 async function reserveSeats () {
   if (currentSelectedShowIndex === null) return;
 
@@ -368,7 +474,7 @@ async function reserveSeats () {
       },
       showId: show._id,
       seats: seatNumbers,
-      customerName: customerName
+      customerName
     })
   });
 
@@ -379,18 +485,14 @@ async function reserveSeats () {
 
   const reservation = await response.json();
   reservations.push(reservation);
-  show.reservedSeats = show.reservedSeats + seatNumbers.length;
-
-  const selectedSeatToggles = seatSelectionContent.querySelectorAll('.seat-toggle:checked');
-  for (let i = 0; i < selectedSeatToggles.length; i++) {
-    selectedSeatToggles[i].checked = false;
-    selectedSeatToggles[i].disabled = true;
-  }
+  recomputeReservedSeats();
+  applySeatGridForShow(show);
 
   renderCustomerTable();
   renderMovieTable();
 }
 
+// first load from backend
 async function initData () {
   try {
     await loadHalls();

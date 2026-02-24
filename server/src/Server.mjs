@@ -38,9 +38,9 @@ app.post('/api/halls', async function (req, res) {
     }
 
     const hall = {
-      name: name,
-      rows: rows,
-      seatsPerRow: seatsPerRow
+      name,
+      rows,
+      seatsPerRow
     };
 
     const result = await req.app.locals.db.collection('halls').insertOne(hall);
@@ -75,10 +75,10 @@ app.post('/api/shows', async function (req, res) {
     }
 
     const show = {
-      movie: movie,
-      hall: hall,
-      date: date,
-      time: time
+      movie,
+      hall,
+      date,
+      time
     };
 
     const result = await req.app.locals.db.collection('shows').insertOne(show);
@@ -113,10 +113,10 @@ app.post('/api/reservations', async function (req, res) {
     }
 
     const reservation = {
-      show: show,
-      showId: showId,
-      seats: seats,
-      customerName: customerName
+      show,
+      showId,
+      seats,
+      customerName
     };
 
     const result = await req.app.locals.db.collection('reservations').insertOne(reservation);
